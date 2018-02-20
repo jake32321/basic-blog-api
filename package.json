@@ -1,0 +1,37 @@
+{
+  "name": "basic-blog-api",
+  "version": "0.0.1",
+  "description": "Blog API that can be used with any fronted using a proxy. ",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node bin/dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jake32321/basic-blog-api.git"
+  },
+  "keywords": [
+    "blog",
+    "api",
+    "server",
+    "js"
+  ],
+  "author": "Jacob Reed",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/jake32321/basic-blog-api/issues"
+  },
+  "homepage": "https://github.com/jake32321/basic-blog-api#readme",
+  "dependencies": {
+    "ava": "^0.25.0",
+    "body-parser": "^1.18.2",
+    "boom": "^7.1.1",
+    "dotenv": "^5.0.0",
+    "express": "^4.16.2",
+    "firebase": "^4.10.0",
+    "joi": "^13.1.2",
+    "moment": "^2.20.1",
+    "shortid": "^2.2.8"
+  }
+}
