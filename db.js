@@ -1,12 +1,13 @@
-const admin = require('firebase-admin');
+const firebase = require('firebase');
 
-admin.initializeApp({
-    credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJ_ID,
-        clientEmail: process.env.CLIENT_EMAIL,
-        privateKey: process.env.PRIVATE_KEY
-    }),
-    databaseURL: process.env.DB_URL
-});
+const config = {
+    apiKey: process.env.FB_API_KEY,
+    authDomain: process.env.AUTH_DOM,
+    databaseURL: process.env.DB_URL,
+    storageBucket: process.env.SB_URL,
+    projectId: process.env.PROJ_ID,
+    messagingSenderId: process.env.MES_SEND_ID
+};
+const database = firebase.initializeApp(config);
 
-module.exports.db = admin;
+module.exports.firebase = database;
