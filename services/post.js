@@ -32,3 +32,8 @@ exports.createPost = function(req) {
 exports.getPosts = async function(req){
    return await ref.once('value')
 };
+
+exports.getPostById = async function(req){
+    const postByIdRef = ref.child(req.params.id);
+    return await postByIdRef.once('value');
+}

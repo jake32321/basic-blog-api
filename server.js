@@ -13,12 +13,21 @@ const ip = process.env.IP || 'localhost'
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+    res.send('Hello!');
+});
+
 app.get('/posts', async (req, res) => {
     await post.getPosts().then(result => {
-        console.log(result)
-        res.send(result)
+        res.send(result);
     })
-})
+});
+
+app.get('/posts/:id', async (req, res) => {
+    await post.getPostById(req).then(result => {
+        res.send(result);
+    })
+});
 
 app.post('/posts', (req, res) => {
     const result = Joi.validate(req.body, post.postSchema);
