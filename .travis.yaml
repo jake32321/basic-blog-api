@@ -1,0 +1,10 @@
+langauge: generic
+sudo: required
+services:
+  - docker
+before_script:
+  - docker-compose build
+after_success:
+  - docker login -u _ -p "$HER_AUTH_TOK" registry.heroku.com
+  - docker build -t registry.heroku.com/blog-api-backend/web -f Dockerfile .
+  - docker push registry.heroku.com/blog-api-backend/web
