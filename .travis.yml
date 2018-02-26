@@ -1,4 +1,4 @@
-langauge: generic
+langauge: node_js
 sudo: required
 services:
   - docker
