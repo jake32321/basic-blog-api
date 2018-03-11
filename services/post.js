@@ -34,6 +34,7 @@ exports.getPosts = async function(req){
 };
 
 exports.getPostById = async function(req){
+    console.log(req.params);
     const postByIdRef = ref.child(req.params.id);
     return await postByIdRef.once('value');
 }
