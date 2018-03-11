@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
-const posts = require('../services/post');
-const db = require('../db');
+const posts = require('../../services/post');
+const db = require('../../lib/db');
 const test = require('ava');
 
 test('Should post if the request is properly formed.', async t => {

@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const Boom = require('boom')
 const firebase = require('firebase');
-const db = require('./../db');
+const db = require('./../lib/db');
 const shortid = require('shortid');
 
 const ref = db.firebase.database().ref('/posts');
