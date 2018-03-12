@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 dotenv.config();
-const posts = require('../../services/post');
+const { createPost } = require('../../services/post');
 const db = require('../../lib/db');
 const test = require('ava');
 
@@ -11,7 +11,7 @@ test('Should post if the request is properly formed.', async t => {
         textBody: "This is some sample text that needs to be tested."
     }
 
-    const res = await posts.createPost(req);
+    const res = await createPost(req);
     t.truthy(res);
     t.truthy(res.id);
 });
@@ -23,7 +23,7 @@ test('Should fail if the title is not included.', async t => {
     }
 
     try {
-        const res = await posts.createPost(req);
+        const res = await createPost(req);
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
@@ -38,7 +38,7 @@ test('Should fail if the textBody is not included.', async t => {
     }
 
     try {
-        const res = await posts.createPost(req);
+        const res = await createPost(req);
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
@@ -53,7 +53,7 @@ test('Should fail if the author is not included.', async t => {
     }
 
     try {
-        const res = await posts.createPost(req);
+        const res = await createPost(req);
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
