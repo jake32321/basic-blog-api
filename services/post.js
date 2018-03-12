@@ -46,11 +46,9 @@ exports.createPost = function(req) {
 };
 
 exports.getPosts = async function(req){
-    let data;
-    return await ref.once('value', snapshot => {
-        data = snapshot.val();
+    return await ref.once('value').then(snapshot => {
+        return snapshot.val();
     });
-    return data;
 };
 
 exports.getPostById = async function(id){
@@ -58,8 +56,12 @@ exports.getPostById = async function(id){
     if (result.error === null){
         let data;
         const postByIdRef = ref.child(id);
-        await postByIdRef.once('value', snapshot => {
-            data = snapshot.val();
+        await postByIdRef.once('value').then(snapshot => {
+            if (snapshot.val() !== null) {
+                data = snapshot.val();
+            } else {
+                throw Boom.badRequest('Could not find a post with that Id.');
+            }
         });
         return data;
     } else {
@@ -76,9 +78,13 @@ exports.updatePost = async function(req, id){
             let data;
             const postByIdRef = ref.child(id);
             postByIdRef.update(req);
-            await postByIdRef.once('value', snapshot => {
-                data = snapshot.val();
-            });
+            await postByIdRef.once('value').then(snapshot => {
+                if (snapshot.val() !== null) {
+                    data = snapshot.val();
+                } else {
+                    throw Boom.badRequest('Could not find a post with that Id.');
+                }
+            })
             return data;
         } else {
             throw Boom.badRequest(resultReq.error);
