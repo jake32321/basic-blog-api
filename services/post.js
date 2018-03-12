@@ -53,17 +53,17 @@ exports.getPosts = async function(req){
     return data;
 };
 
-exports.getPostById = async function(req){
-    const result = Joi.validate(req.params.id, internals.schemas.isValidShortId);
+exports.getPostById = async function(id){
+    const result = Joi.validate(id, internals.schemas.isValidShortId);
     if (result.error === null){
         let data;
-        const postByIdRef = ref.child(req.params.id);
+        const postByIdRef = ref.child(id);
         await postByIdRef.once('value', snapshot => {
             data = snapshot.val();
         });
         return data;
     } else {
-        throw Boom.badRequest(result.error);
+        throw Boom.badRequest('Id is not valid');
     }
 }
 

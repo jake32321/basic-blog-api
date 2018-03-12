@@ -64,3 +64,15 @@ test('Should pass without anything in the request', async t => {
     const res = await updatePost(req, internals.ids[2]);
     t.truthy(res);
 });
+
+test('Should fail with a bad Id', async t => {
+    const req = {}
+
+    try {
+        const res = await updatePost(req, 'Gt54');
+    } catch (err) {
+        t.is(err.output.payload.statusCode, 400);
+        t.is(err.output.payload.error, 'Bad Request');
+        t.is(err.output.payload.message, 'Id is not valid');
+    }
+});

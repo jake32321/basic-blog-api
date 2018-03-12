@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const result = await post.getPostById(req);
+        const result = await post.getPostById(req.params.id);
         res.send(result);
     } catch(err) {
         res.send(err.output.payload);
