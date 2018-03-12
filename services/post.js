@@ -3,7 +3,6 @@ const Boom = require('boom')
 const firebase = require('firebase');
 const db = require('./../lib/db');
 const shortid = require('shortid');
-
 const ref = db.firebase.database().ref('/posts');
 
 const internals = {
@@ -16,6 +15,15 @@ internals.schemas.postSchema = Joi.object().keys({
     textBody: Joi.string().required(),
     date: Joi.date()
 });
+
+internals.schemas.updatePostSchema = Joi.object().keys({
+    title: Joi.string().optional(),
+    author: Joi.string().optional(),
+    textBody: Joi.string().optional(),
+    date: Joi.date()
+});
+
+internals.schemas.isValidShortId = Joi.string().regex(/^[a-zA-Z0-9_-]{7,14}$/).required();
 
 exports.createPost = function(req) {
     const result = Joi.validate(req, internals.schemas.postSchema)
@@ -38,27 +46,44 @@ exports.createPost = function(req) {
 };
 
 exports.getPosts = async function(req){
-   return await ref.once('value')
+    let data;
+    return await ref.once('value', snapshot => {
+        data = snapshot.val();
+    });
+    return data;
 };
 
 exports.getPostById = async function(req){
-    const postByIdRef = ref.child(req.params.id);
-
-    return await postByIdRef.once('value');
+    const result = Joi.validate(req.params.id, internals.schemas.isValidShortId);
+    if (result.error === null){
+        let data;
+        const postByIdRef = ref.child(req.params.id);
+        await postByIdRef.once('value', snapshot => {
+            data = snapshot.val();
+        });
+        return data;
+    } else {
+        throw Boom.badRequest(result.error);
+    }
 }
 
 exports.updatePost = async function(req, id){
+    const resultReq = Joi.validate(req, internals.schemas.updatePostSchema);
+    const resultId = Joi.validate(id, internals.schemas.isValidShortId);
 
-    const postByIdRef = ref.child(req.params.id);
-
-    const dataToPost = {
-        title: req.title,
-        author: req.author,
-        textBody: req.textBody,
-        date: new Date().toISOString()
+    if (resultId.error === null) {
+        if (resultReq.error === null){
+            let data;
+            const postByIdRef = ref.child(id);
+            postByIdRef.update(req);
+            await postByIdRef.once('value', snapshot => {
+                data = snapshot.val();
+            });
+            return data;
+        } else {
+            throw Boom.badRequest(resultReq.error);
+        }
+    } else {
+        throw Boom.badRequest('Id is not valid');
     }
-
-    postByIdRef.set(dataToPost)
-
-    return dataToPost;
 }
