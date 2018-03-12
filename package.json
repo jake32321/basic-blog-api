@@ -4,7 +4,7 @@
   "description": "Blog API that can be used with any fronted using a proxy. ",
   "main": "server.js",
   "scripts": {
-    "test": "npm test",
+    "test": "ava --verbose",
     "start": "node bin/dev"
   },
   "repository": {

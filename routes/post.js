@@ -1,29 +1,41 @@
 const express = require('express');
-const Joi = require('joi');
-const Boom = require('boom');
 const post = require('../services/post');
 const router = require('express').Router();
 
 router.get('/', async (req, res) => {
-    await post.getPosts().then(result => {
-        res.send(result);
-    })
-});
-
-router.get('/:id', async (req, res) => {
-    await post.getPostById(req).then(result => {
-        res.send(result);
-    })
+    try{
+        await post.getPosts().then(result => {
+            res.send(result);
+        });
+    } catch(err) {
+        res.send(err.output.payload);
+    }
 });
 
 router.post('/', (req, res) => {
-    const result = Joi.validate(req.body, post.postSchema);
+    try {
+        const postRes = post.createPost(req.body);
+        res.send(postRes);
+    } catch(err) {
+        res.send(err.output.payload);
+    }
+});
 
-    if(result.error === null){
-        const test = post.createPost(req.body);
-        res.send(test);
-    } else {
-        res.send(Boom.badRequest('Request not formed correctly.'));
+router.get('/:id', async (req, res) => {
+    try {
+        const result = await post.getPostById(req.params.id);
+        res.send(result);
+    } catch(err) {
+        res.send(err.output.payload);
+    }
+});
+
+router.put('/:id', async (req, res) => {
+    try {
+        const postUpdateRes = await post.updatePost(req.body, req.params.id);
+        res.send(postUpdateRes);
+    } catch(err) {
+        res.send(err.output.payload);
     }
 });
 
