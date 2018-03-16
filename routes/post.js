@@ -1,4 +1,5 @@
 const express = require('express');
+const Boom = require('boom');
 const post = require('../services/post');
 const router = require('express').Router();
 
@@ -21,13 +22,12 @@ router.post('/', (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
-    try {
-        const result = await post.getPostById(req.params.id);
-        res.send(result);
-    } catch(err) {
+router.get('/:id', (req, res) => {
+    post.getPostById(req.params.id).then(data => {
+        res.send(data)
+    }).catch((err) => {
         res.send(err.output.payload);
-    }
+    });
 });
 
 router.put('/:id', async (req, res) => {

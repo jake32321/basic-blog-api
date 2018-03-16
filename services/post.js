@@ -25,7 +25,17 @@ internals.schemas.updatePostSchema = Joi.object().keys({
 
 internals.schemas.isValidShortId = Joi.string().regex(/^[a-zA-Z0-9_-]{7,14}$/).required();
 
-exports.createPost = function(req) {
+dataExists = async (id) => {
+    return await ref.child(id).once('value').then(snapshot => {
+        if(snapshot.val() !== null){
+            return true;
+        } else {
+            return false;
+        }
+    });
+};
+
+exports.createPost = (req) => {
     const result = Joi.validate(req, internals.schemas.postSchema)
 
     if (result.error == null) {
@@ -45,29 +55,34 @@ exports.createPost = function(req) {
     }
 };
 
-exports.getPosts = async function(req){
+exports.getPosts = async (req) => {
     let data;
+
     return await ref.once('value', snapshot => {
         data = snapshot.val();
     });
+
     return data;
 };
 
-exports.getPostById = async function(id){
-    const result = Joi.validate(id, internals.schemas.isValidShortId);
-    if (result.error === null){
-        let data;
-        const postByIdRef = ref.child(id);
-        await postByIdRef.once('value', snapshot => {
-            data = snapshot.val();
-        });
-        return data;
-    } else {
-        throw Boom.badRequest('Id is not valid');
-    }
+exports.getPostById = async (id) => {
+    return dataExists(id).then(boolVal => {
+        const result = Joi.validate(id, internals.schemas.isValidShortId);
+        if (result.error === null){
+            if (boolVal){
+                return ref.child(id).once('value').then(snapshot => {
+                    return snapshot.val();
+                });
+            } else {
+                throw Boom.badRequest(`Could not find Post with ID: ${id}`);
+            }
+        } else {
+            throw Boom.badRequest('Id is not valid');
+        }
+    });
 }
 
-exports.updatePost = async function(req, id){
+exports.updatePost = async (req, id) => {
     const resultReq = Joi.validate(req, internals.schemas.updatePostSchema);
     const resultId = Joi.validate(id, internals.schemas.isValidShortId);
 
