@@ -26,7 +26,8 @@ internals.schemas.updatePostSchema = Joi.object().keys({
 internals.schemas.isValidShortId = Joi.string().regex(/^[a-zA-Z0-9_-]{7,14}$/).required();
 
 dataExists = async (id) => {
-    return await ref.child(id).once('value').then(snapshot => {
+    return await ref.child(id).once('value')
+    .then(snapshot => {
         if(snapshot.val() !== null){
             return true;
         } else {
@@ -70,7 +71,8 @@ exports.getPostById = async (id) => {
         const result = Joi.validate(id, internals.schemas.isValidShortId);
         if (result.error === null){
             if (boolVal){
-                return ref.child(id).once('value').then(snapshot => {
+                return ref.child(id).once('value')
+                .then(snapshot => {
                     return snapshot.val();
                 });
             } else {
@@ -88,17 +90,23 @@ exports.updatePost = async (req, id) => {
 
     if (resultId.error === null) {
         if (resultReq.error === null){
-            let data;
-            const postByIdRef = ref.child(id);
-            postByIdRef.update(req);
-            await postByIdRef.once('value', snapshot => {
-                data = snapshot.val();
+            return dataExists(id).then(boolVal => {
+                if (boolVal){
+                    ref.child(id).update(req);
+                } else {
+                    throw Boom.badRequest(`Could not find Post with ID: ${id}`);
+                }
+            }).then(() => {
+                return ref.child(id).once('value').then(snapshot => {
+                    return snapshot.val();
+                });
             });
-            return data;
         } else {
-            throw Boom.badRequest(resultReq.error);
+            throw Boom.badRequest('Request poorly formed.')
         }
     } else {
-        throw Boom.badRequest('Id is not valid');
+        throw Boom.badRequest('Id is not valid.');
     }
 }
+
+        

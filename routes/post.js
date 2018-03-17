@@ -30,13 +30,12 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.put('/:id', async (req, res) => {
-    try {
-        const postUpdateRes = await post.updatePost(req.body, req.params.id);
-        res.send(postUpdateRes);
-    } catch(err) {
+router.put('/:id', (req, res) => {
+    post.updatePost(req.body, req.params.id).then(data => {
+        res.send(data);
+    }).catch(err => {
         res.send(err.output.payload);
-    }
+    });  
 });
 
 module.exports = router;
