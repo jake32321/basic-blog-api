@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 dotenv.config();
-const { updatePost, createPost } = require('../../services/post');
+const { updatePost, createPost, deletePost } = require('../../services/post');
 const db = require('../../lib/db');
 const test = require('ava');
 
@@ -33,6 +33,12 @@ test.before(t => {
 
     internals.ids.push(resThree.id);
 });
+
+test.after(t => {
+    internals.ids.forEach(id => {
+        deletePost(id);
+    });
+})
 
 test('Should pass without title and author', async t => {
     const req = {
@@ -73,6 +79,6 @@ test('Should fail with a bad Id', async t => {
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
-        t.is(err.output.payload.message, 'Id is not valid');
+        t.is(err.output.payload.message, 'Id is not valid.');
     }
 });

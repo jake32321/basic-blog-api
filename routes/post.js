@@ -4,13 +4,11 @@ const post = require('../services/post');
 const router = require('express').Router();
 
 router.get('/', async (req, res) => {
-    try{
-        await post.getPosts().then(result => {
-            res.send(result);
-        });
-    } catch(err) {
+    await post.getPosts().then(result => {
+        res.send(result);
+    }).catch(err => {
         res.send(err.output.payload);
-    }
+    });
 });
 
 router.post('/', (req, res) => {
@@ -32,6 +30,14 @@ router.get('/:id', (req, res) => {
 
 router.put('/:id', (req, res) => {
     post.updatePost(req.body, req.params.id).then(data => {
+        res.send(data);
+    }).catch(err => {
+        res.send(err.output.payload);
+    });  
+});
+
+router.delete('/:id', (req, res) => {
+    post.deletePost(req.params.id).then(data => {
         res.send(data);
     }).catch(err => {
         res.send(err.output.payload);

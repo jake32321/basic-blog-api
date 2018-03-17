@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 dotenv.config();
-const { getPostById, createPost } = require('../../services/post');
+const { getPostById, createPost, deletePost } = require('../../services/post');
 const db = require('../../lib/db');
 const test = require('ava');
 
@@ -18,13 +18,19 @@ test.before(t => {
     internals.ids.push(resOne.id);
 });
 
+test.after(t => {
+    internals.ids.forEach(id => {
+        deletePost(id);
+    })
+})
+
 test('Should fail to retrieve with a bad Id.', async t => {
     try {
         const res = await getPostById('GtHO54');
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
-        t.is(err.output.payload.message, 'Id is not valid');
+        t.is(err.output.payload.message, 'Id is not valid.');
     }
 });
 

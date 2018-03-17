@@ -25,15 +25,19 @@ internals.schemas.updatePostSchema = Joi.object().keys({
 
 internals.schemas.isValidShortId = Joi.string().regex(/^[a-zA-Z0-9_-]{7,14}$/).required();
 
-dataExists = async (id) => {
-    return await ref.child(id).once('value')
-    .then(snapshot => {
-        if(snapshot.val() !== null){
-            return true;
-        } else {
-            return false;
-        }
-    });
+postDataExists = async (id) => {
+    const result = Joi.validate(id, internals.schemas.isValidShortId);
+    if (result.error === null) {
+        return await ref.child(id).once('value').then(snapshot => {
+            if(snapshot.val() !== null){
+                return true;
+            } else {
+                return false;
+            }
+        });
+    } else {
+        throw Boom.badRequest('Id is not valid.');
+    }
 };
 
 exports.createPost = (req) => {
@@ -57,56 +61,53 @@ exports.createPost = (req) => {
 };
 
 exports.getPosts = async (req) => {
-    let data;
-
     return await ref.once('value', snapshot => {
-        data = snapshot.val();
+        return snapshot.val();
     });
-
-    return data;
 };
 
-exports.getPostById = async (id) => {
-    return dataExists(id).then(boolVal => {
-        const result = Joi.validate(id, internals.schemas.isValidShortId);
-        if (result.error === null){
-            if (boolVal){
-                return ref.child(id).once('value')
-                .then(snapshot => {
-                    return snapshot.val();
-                });
-            } else {
-                throw Boom.badRequest(`Could not find Post with ID: ${id}`);
-            }
+exports.getPostById = (id) => {
+    return postDataExists(id).then(boolVal => {
+        if (boolVal){
+            return ref.child(id).once('value').then(snapshot => {
+                return snapshot.val();
+            });
         } else {
-            throw Boom.badRequest('Id is not valid');
+            throw Boom.badRequest(`Could not find Post with ID: ${id}`);
         }
     });
 }
 
-exports.updatePost = async (req, id) => {
-    const resultReq = Joi.validate(req, internals.schemas.updatePostSchema);
-    const resultId = Joi.validate(id, internals.schemas.isValidShortId);
-
-    if (resultId.error === null) {
-        if (resultReq.error === null){
-            return dataExists(id).then(boolVal => {
-                if (boolVal){
-                    ref.child(id).update(req);
-                } else {
-                    throw Boom.badRequest(`Could not find Post with ID: ${id}`);
-                }
-            }).then(() => {
-                return ref.child(id).once('value').then(snapshot => {
-                    return snapshot.val();
-                });
-            });
+exports.updatePost = (req, id) => { 
+    return postDataExists(id).then(boolVal => {
+        const result = Joi.validate(req, internals.schemas.updatePostSchema);
+        if (result.error === null) {
+            if (boolVal){
+                ref.child(id).update(req);
+            } else {
+                throw Boom.badRequest(`Could not find Post with ID: ${id}`);
+            }
         } else {
             throw Boom.badRequest('Request poorly formed.')
         }
-    } else {
-        throw Boom.badRequest('Id is not valid.');
-    }
+    }).then(() => {
+        return ref.child(id).once('value').then(snapshot => {
+            return snapshot.val();
+        });
+    });
+}
+
+exports.deletePost = (id) => {
+    return postDataExists(id).then(boolVal => {
+        if (boolVal){
+            ref.child(id).remove();
+            return { 
+                message: `Post ${id}, has been deleted.` 
+            };
+        } else {
+            throw Boom.badRequest(`Could not find Post with ID: ${id}`);
+        }
+    });
 }
 
         

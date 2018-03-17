@@ -1,8 +1,18 @@
 const dotenv = require('dotenv');
 dotenv.config();
-const { createPost } = require('../../services/post');
+const { createPost, deletePost } = require('../../services/post');
 const db = require('../../lib/db');
 const test = require('ava');
+
+const internals = {
+    ids: []
+}
+
+test.after(t => {
+    internals.ids.forEach(id => {
+        deletePost(id);
+    });
+})
 
 test('Should post if the request is properly formed.', async t => {
     const req = {
@@ -12,6 +22,8 @@ test('Should post if the request is properly formed.', async t => {
     }
 
     const res = await createPost(req);
+    internals.ids.push(res.id);
+
     t.truthy(res);
     t.truthy(res.id);
 });
