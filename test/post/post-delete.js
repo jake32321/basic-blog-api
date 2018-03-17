@@ -34,12 +34,12 @@ test('Should fail when a post with an ID cannot be found.', async t => {
     }
 });
 
-// test('Should fail to retrieve with a bad Id.', async t => {
-//     try {
-//         const res = await deletePost('HyUn');
-//     } catch (err) {
-//         t.is(err.output.payload.statusCode, 400);
-//         t.is(err.output.payload.error, 'Bad Request');
-//         t.is(err.output.payload.message, 'Id is not valid.');
-//     }
-// });
+test('Should fail to retrieve with a bad Id.', async t => {
+    try {
+        const res = await deletePost('HyUn');
+    } catch (err) {
+        t.is(err.output.payload.statusCode, 400);
+        t.is(err.output.payload.error, 'Bad Request');
+        t.is(err.output.payload.message, 'Id is not valid.');
+    }
+});
