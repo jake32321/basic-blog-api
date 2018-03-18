@@ -9,29 +9,29 @@ const internals = {
 }
 
 test.before(t => {
-    const resOne = createPost({
+    const reqOne = createPost({
         title: "This Is A Title",
         author: "Test Author",
         textBody: "I blessed the rains down in Africaaaaa!"
     });
 
-    internals.ids.push(resOne.id);
+    internals.ids.push(reqOne.id);
 
-    const resTwo = createPost({
+    const reqTwo = createPost({
         title: "This Is A Title 2",
         author: "Test Author 2",
         textBody: "I blessed the rains down in Africaaaaa! 2"
     });
 
-    internals.ids.push(resTwo.id);
+    internals.ids.push(reqTwo.id);
 
-    const resThree = createPost({
+    const reqThree = createPost({
         title: "This Is A Title 2",
         author: "Test Author 2",
         textBody: "I blessed the rains down in Africaaaaa! 2"
     });
 
-    internals.ids.push(resThree.id);
+    internals.ids.push(reqThree.id);
 });
 
 test.after(t => {
@@ -80,5 +80,31 @@ test('Should fail with a bad Id', async t => {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
         t.is(err.output.payload.message, 'Id is not valid.');
+    }
+});
+
+test(`Should fail if a post with that ID doesn't exist.`, async t => {
+    const req = {}
+
+    try {
+        const res = await updatePost(req, 'HyT5eWq');
+    } catch (err) {
+        t.is(err.output.payload.statusCode, 400);
+        t.is(err.output.payload.error, 'Bad Request');
+        t.is(err.output.payload.message, 'Could not find Post with ID: HyT5eWq');
+    }
+});
+
+test(`Should fail if a post is poorly formed.`, async t => {
+    const req = {
+        garbo: 'bad prop'
+    }
+
+    try {
+        const res = await updatePost(req, internals.ids[1]);
+    } catch (err) {
+        t.is(err.output.payload.statusCode, 400);
+        t.is(err.output.payload.error, 'Bad Request');
+        t.is(err.output.payload.message, 'Request poorly formed.');
     }
 });

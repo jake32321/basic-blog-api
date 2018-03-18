@@ -34,6 +34,16 @@ test('Should fail to retrieve with a bad Id.', async t => {
     }
 });
 
+test(`Should fail if a post with that ID doesn't exist.`, async t => {
+    try {
+        const res = await getPostById('HyT5eWq');
+    } catch (err) {
+        t.is(err.output.payload.statusCode, 400);
+        t.is(err.output.payload.error, 'Bad Request');
+        t.is(err.output.payload.message, `Could not find Post with ID: HyT5eWq`);
+    }
+});
+
 test('Should pass if the Id exists.', async t => {
     const res = await getPostById(internals.ids[0]);
 
