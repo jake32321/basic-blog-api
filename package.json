@@ -4,8 +4,9 @@
   "description": "Blog API that can be used with any fronted using a proxy. ",
   "main": "server.js",
   "scripts": {
-    "test": "ava --verbose",
-    "start": "node bin/dev"
+    "test": "nyc ava --verbose",
+    "start": "node bin/dev",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -34,5 +35,9 @@
     "moment": "^2.20.1",
     "npm": "^5.7.1",
     "shortid": "^2.2.8"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.0",
+    "nyc": "^11.6.0"
   }
 }
