@@ -1,11 +1,5 @@
 version: 2
 jobs:
-  machine:
-    services:
-      - docker 
-  dependencies:
-    cache_directories:
-      - ~/docker 
   build:
     docker:
       - image: circleci/node:7.10 
@@ -22,10 +16,13 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
-  deployment:
-    staging:
-      branch: master
-      commands:
-        - docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-        - docker build --rm=false -t registry.heroku.com/blog-api-backend/web -f Dockerfile .
-        - docker push registry.heroku.com/blog-api-backend/web
+  deploy:
+    machine:
+      services:
+        - docker 
+    steps:
+      - run: 
+        command: |
+          docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+          docker build --rm=false -t registry.heroku.com/blog-api-backend/web -f Dockerfile .
+          docker push registry.heroku.com/blog-api-backend/web
