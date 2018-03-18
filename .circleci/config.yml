@@ -1,4 +1,10 @@
 version: 2
+machine:
+  services:
+    - docker 
+dependencies:
+  cache_directories:
+    - ~/docker 
 jobs:
   build:
     docker:
@@ -16,3 +22,10 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
+deployment:
+  staging:
+    branch: master
+    commands:
+      - docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+      - docker build --rm=false -t registry.heroku.com/blog-api-backend/web -f Dockerfile .
+      - docker push registry.heroku.com/blog-api-backend/web
