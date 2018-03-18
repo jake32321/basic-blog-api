@@ -17,19 +17,4 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
     
-  deployment:
-    machine:
-      enabled: true
-      services:
-        - docker 
-    working_directory: ~/basic-blog-api
-    steps:
-      - checkout
-      - run:
-          name: Setup Heroku
-          command: bash .circleci/setup_heroku.sh
-      - run: 
-        command: |
-          docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-          docker build --rm=false -t registry.heroku.com/blog-api-backend/web -f Dockerfile .
-          docker push registry.heroku.com/blog-api-backend/web
+  
