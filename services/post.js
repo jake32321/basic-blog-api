@@ -83,7 +83,7 @@ exports.updatePost = (req, id) => {
         const result = Joi.validate(req, internals.schemas.updatePostSchema);
         if (result.error === null) {
             if (boolVal){
-                ref.child(id).update(req);
+                return ref.child(id).update(req);
             } else {
                 throw Boom.badRequest(`Could not find Post with ID: ${id}`);
             }
