@@ -1,8 +1,7 @@
 const Joi = require('joi');
-const { promisify } = require('util');
-const Boom = require('boom')
+const Boom = require('boom');
 const admin = require('firebase-admin');
-const _ = promisify(require('lodash'));
+const _ = require('lodash');
 const ref = admin.database().ref('/users');
 
 const internals = {
