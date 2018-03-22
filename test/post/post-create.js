@@ -1,12 +1,14 @@
-const dotenv = require('dotenv');
-dotenv.config();
-const { createPost, deletePost } = require('../../services/post');
-const db = require('../../lib/db');
+require('dotenv/config');
+require('../../lib/db').init();
+const admin = require('firebase-admin');
 const test = require('ava');
+const { createPost, deletePost } = require('../../services/post');
 
 const internals = {
     ids: []
 }
+
+console.log('test', process.env.PROJ_ID)
 
 test.after(t => {
     internals.ids.forEach(id => {

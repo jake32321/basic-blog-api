@@ -1,14 +1,15 @@
-const dotenv = require('dotenv');
-dotenv.config();
-const { getPostById, createPost, deletePost } = require('../../services/post');
-const db = require('../../lib/db');
+require('dotenv/config');
+require('../../lib/db').init();
+const admin = require('firebase-admin');
 const test = require('ava');
+const { getPostById, createPost, deletePost } = require('../../services/post');
+
 
 const internals = {
     ids: []
 }
 
-test.before(t => {
+test.before(async t => {
     const resOne = createPost({
         title: "This Is A Title",
         author: "Test Author",

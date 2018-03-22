@@ -1,8 +1,8 @@
-const dotenv = require('dotenv');
-dotenv.config();
-const { updatePost, createPost, deletePost } = require('../../services/post');
-const db = require('../../lib/db');
+require('dotenv/config');
+require('../../lib/db').init();
+const admin = require('firebase-admin');
 const test = require('ava');
+const { updatePost, createPost, deletePost } = require('../../services/post');
 
 const internals = {
     ids: []
