@@ -1,9 +1,8 @@
 const Joi = require('joi');
 const Boom = require('boom')
-const firebase = require('firebase');
-const db = require('./../lib/db');
+const admin = require('firebase-admin');
 const shortid = require('shortid');
-const ref = db.firebase.database().ref('/posts');
+const ref = admin.database().ref('/posts');
 
 const internals = {
     schemas: {}

@@ -1,12 +1,11 @@
 const Joi = require('joi');
 const Boom = require('boom')
-const firebase = require('firebase');
-const db = require('./../lib/db');
-const bcrypt = require('bcrypt');
-const ref = db.firebase.database().ref('/posts');
+const admin = require('firebase-admin');
+const ref = admin.database().ref('/users');
 
 const internals = {
-    schemas: {}
+    schemas: {},
+    saltIter: 10
 }
 
 internals.schemas.userSchema = Joi.object().keys({
@@ -16,3 +15,27 @@ internals.schemas.userSchema = Joi.object().keys({
     displayName: Joi.string().required(),
     disabled: Joi.boolean().default(false)
 });
+
+exports.createUser = (req) => {
+    const result = Joi.validate(req, internals.schemas.userSchema);
+    if (result.error === null) {
+        return admin.auth().createUser({
+            email: req.email,
+            emailVerified: req.emailVerified,
+            password: req.password,
+            displayName: req.displayName,
+            disabled: req.disabled
+        }).then(userInfo => {
+            ref.child(userInfo.uid).set({
+                email: req.email,
+                emailVerified: req.emailVerified,
+                displayName: req.displayName,
+                disabled: req.disabled
+            });
+        }).catch(err => {
+            return err;
+        });
+    } else {
+        throw Boom.badRequest(result.error)
+    }
+}

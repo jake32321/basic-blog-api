@@ -32,6 +32,7 @@
     "dotenv": "^5.0.0",
     "express": "^4.16.2",
     "firebase": "^4.10.0",
+    "firebase-admin": "^5.11.0",
     "joi": "^13.1.2",
     "moment": "^2.20.1",
     "npm": "^5.7.1",
