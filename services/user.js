@@ -25,5 +25,5 @@ exports.createUser = async (req) => {
     const dataToFB = _.pick(payload, ['email', 'emailVerified', 'displayName', 'disabled']);
 
     await userRef.set(dataToFB);  
-    return userRef.once('value')
+    return userRef.once('value');
 };

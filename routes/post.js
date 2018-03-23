@@ -3,21 +3,20 @@ const Boom = require('boom');
 const post = require('../services/post');
 const router = require('express').Router();
 
-router.get('/', async (req, res) => {
-    await post.getPosts().then(result => {
+router.get('/', (req, res) => {
+    post.getPosts().then(result => {
         res.send(result);
     }).catch(err => {
         res.send(err.output.payload);
     });
 });
 
-router.post('/', async (req, res) => {
-    try {
-        const postRes = await post.createPost(req.body);
-        res.send(postRes);
-    } catch(err) {
+router.post('/', (req, res) => {
+    post.createPost(req.body).then(data => {
+        res.send(data);
+    }).catch(err => {
         res.send(err.output.payload);
-    }
+    });
 });
 
 router.get('/:id', (req, res) => {
