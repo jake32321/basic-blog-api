@@ -11,9 +11,9 @@ router.get('/', async (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const postRes = post.createPost(req.body);
+        const postRes = await post.createPost(req.body);
         res.send(postRes);
     } catch(err) {
         res.send(err.output.payload);

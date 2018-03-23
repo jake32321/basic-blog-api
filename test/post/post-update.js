@@ -8,8 +8,8 @@ const internals = {
     ids: []
 }
 
-test.before(t => {
-    const reqOne = createPost({
+test.before(async t => {
+    const reqOne = await createPost({
         title: "This Is A Title",
         author: "Test Author",
         textBody: "I blessed the rains down in Africaaaaa!"
@@ -17,7 +17,7 @@ test.before(t => {
 
     internals.ids.push(reqOne.id);
 
-    const reqTwo = createPost({
+    const reqTwo = await createPost({
         title: "This Is A Title 2",
         author: "Test Author 2",
         textBody: "I blessed the rains down in Africaaaaa! 2"
@@ -25,7 +25,7 @@ test.before(t => {
 
     internals.ids.push(reqTwo.id);
 
-    const reqThree = createPost({
+    const reqThree = await createPost({
         title: "This Is A Title 2",
         author: "Test Author 2",
         textBody: "I blessed the rains down in Africaaaaa! 2"
@@ -35,8 +35,8 @@ test.before(t => {
 });
 
 test.after(t => {
-    internals.ids.forEach(id => {
-        deletePost(id);
+    internals.ids.forEach(async id => {
+       await deletePost(id);
     });
 })
 
@@ -46,6 +46,7 @@ test('Should pass without title and author', async t => {
     }
 
     const res = await updatePost(req, internals.ids[0]);
+
     t.truthy(res.title);
     t.truthy(res.author);
     t.truthy(res.date);
@@ -58,6 +59,7 @@ test('Should pass without textBody and author', async t => {
     }
 
     const res = await updatePost(req, internals.ids[0]);
+
     t.truthy(res.textBody);
     t.truthy(res.author);
     t.truthy(res.date);

@@ -8,14 +8,20 @@ const internals = {
     ids: []
 }
 
-test.before(t => {
-    const resOne = createPost({
+test.before(async t => {
+    const resOne = await createPost({
         title: "This Is A Title",
         author: "Test Author",
         textBody: "I blessed the rains down in Africaaaaa!"
     });
 
     internals.ids.push(resOne.id);
+});
+
+test.after(t => {
+    internals.ids.forEach(async id => {
+        await deletePost(id);
+    });
 });
 
 test('Should delete a post if the ID matches a post.', async t => {

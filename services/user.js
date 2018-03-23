@@ -18,13 +18,12 @@ internals.schemas.userSchema = Joi.object().keys({
 });
 
 exports.createUser = async (req) => {
-    const properties = {};
-    properties.payload = await Joi.validate(req, internals.schemas.userSchema);
-    properties.userInfo = await admin.auth().createUser(properties.payload);
+    const payload = await Joi.validate(req, internals.schemas.userSchema);
+    const userInfo = await admin.auth().createUser(properties);
 
-    const userRef = ref.child(properties.userInfo.uid);
-    const dataToFB = _.pick(properties.payload, ['email', 'emailVerified', 'displayName', 'disabled']);
+    const userRef = ref.child(userInfo.uid);
+    const dataToFB = _.pick(payload, ['email', 'emailVerified', 'displayName', 'disabled']);
 
     await userRef.set(dataToFB);  
     return userRef.once('value')
-}
+};

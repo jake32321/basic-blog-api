@@ -11,10 +11,10 @@ const internals = {
 console.log('test', process.env.PROJ_ID)
 
 test.after(t => {
-    internals.ids.forEach(id => {
-        deletePost(id);
+    internals.ids.forEach(async id => {
+        await deletePost(id);
     });
-})
+});
 
 test('Should post if the request is properly formed.', async t => {
     const req = {

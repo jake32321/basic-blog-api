@@ -10,7 +10,7 @@ const internals = {
 }
 
 test.before(async t => {
-    const resOne = createPost({
+    const resOne = await createPost({
         title: "This Is A Title",
         author: "Test Author",
         textBody: "I blessed the rains down in Africaaaaa!"
@@ -20,8 +20,8 @@ test.before(async t => {
 });
 
 test.after(t => {
-    internals.ids.forEach(id => {
-        deletePost(id);
+    internals.ids.forEach(async id => {
+        await deletePost(id);
     })
 })
 
@@ -35,7 +35,7 @@ test('Should fail to retrieve with a bad Id.', async t => {
     }
 });
 
-test(`Should fail if a post with that ID doesn't exist.`, async t => {
+test('Should fail if a post with that ID doesn\'t exist.', async t => {
     try {
         const res = await getPostById('HyT5eWq');
     } catch (err) {
