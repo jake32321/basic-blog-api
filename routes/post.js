@@ -3,8 +3,8 @@ const Boom = require('boom');
 const post = require('../services/post');
 const router = require('express').Router();
 
-router.get('/', async (req, res) => {
-    await post.getPosts().then(result => {
+router.get('/', (req, res) => {
+    post.getPosts().then(result => {
         res.send(result);
     }).catch(err => {
         res.send(err.output.payload);
@@ -12,12 +12,11 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    try {
-        const postRes = post.createPost(req.body);
-        res.send(postRes);
-    } catch(err) {
+    post.createPost(req.body).then(data => {
+        res.send(data);
+    }).catch(err => {
         res.send(err.output.payload);
-    }
+    });
 });
 
 router.get('/:id', (req, res) => {
