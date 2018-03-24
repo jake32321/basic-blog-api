@@ -27,8 +27,8 @@ internals.schemas.updatePostSchema = Joi.object().keys({
 
 exports.createPost = async (req) => {
     const postId = shortid.generate();
-    const payload = await Joi.validate(req, internals.schemas.postSchema).catch(error => {
-        throw Boom.badRequest(error);
+    const payload = await Joi.validate(req, internals.schemas.postSchema).catch(err => {
+        throw Boom.badRequest(err);
     });
 
     const dataToPost = _.pick(req, ['title', 'author', 'textBody']);
@@ -48,6 +48,7 @@ exports.getPosts = async (req) => {
 
 exports.getPostById = async (id) => {
     const exists = await postDataExists(id, ref);
+
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);
     };
@@ -56,7 +57,7 @@ exports.getPostById = async (id) => {
 };
 
 exports.updatePost = async (req, id) => { 
-    const result = await Joi.validate(req, internals.schemas.updatePostSchema).catch(error => {
+    const result = await Joi.validate(req, internals.schemas.updatePostSchema).catch((err) => {
         throw Boom.badRequest('Request poorly formed.');
     });
 

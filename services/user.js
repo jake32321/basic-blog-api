@@ -20,7 +20,7 @@ internals.schemas.userSchema = Joi.object().keys({
 });
 
 exports.createUser = async (req) => {
-    const payload = await Joi.validate(req, internals.schemas.userSchema).catch(err => {
+    const payload = await Joi.validate(req, internals.schemas.userSchema).catch((err) => {
         throw Boom.badRequest(err);
     });
 

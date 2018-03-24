@@ -9,7 +9,7 @@ const internals = {
     ids: []
 };
 
-test.before(async t => {
+test.before(async (t) => {
     const resOne = await createUser({
         disabled: false,
         displayName: "Joe Blows",
@@ -21,15 +21,15 @@ test.before(async t => {
     internals.ids.push(resOne.uid);
 });
 
-test.after(async t => {
-    internals.ids.forEach(async id => {
+test.after(async (t) => {
+    internals.ids.forEach(async (id) => {
         await admin.database().ref(`users/${id}`).remove();
     });
 
     await admin.auth().deleteUser(internals.ids[0]);
 })
 
-test('Should fail to retrieve with a bad Id.', async t => {
+test('Should fail to retrieve with a bad Id.', async (t) => {
     try {
         const res = await getUserById('GtHO54');
     } catch (err) {
@@ -39,7 +39,7 @@ test('Should fail to retrieve with a bad Id.', async t => {
     }
 });
 
-test('Should fail if a post with that ID doesn\'t exist.', async t => {
+test('Should fail if a post with that ID doesn\'t exist.', async (t) => {
     try {
         const res = await getUserById('HyT5eWq');
     } catch (err) {
@@ -49,7 +49,7 @@ test('Should fail if a post with that ID doesn\'t exist.', async t => {
     }
 });
 
-test('Should pass if the Id exists.', async t => {
+test('Should pass if the Id exists.', async (t) => {
     const res = await getUserById(internals.ids[0]);
 
     t.is(res.disabled, false);

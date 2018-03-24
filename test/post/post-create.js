@@ -9,13 +9,13 @@ const internals = {
 };
 
 
-test.after(t => {
-    internals.ids.forEach(async id => {
+test.after((t) => {
+    internals.ids.forEach(async (id) => {
         await admin.database().ref(`posts/${id}`).remove();
     });
 });
 
-test('Should post if the request is properly formed.', async t => {
+test('Should post if the request is properly formed.', async (t) => {
     const res = await createPost({
         title: "Some title",
         author: "test",
@@ -27,7 +27,7 @@ test('Should post if the request is properly formed.', async t => {
     t.truthy(res.id);
 });
 
-test('Should fail if the title is not included.', async t => {
+test('Should fail if the title is not included.', async (t) => {
     try {
         const res = await createPost({
             author: "Joe Blows",
@@ -40,7 +40,7 @@ test('Should fail if the title is not included.', async t => {
     }
 });
 
-test('Should fail if the textBody is not included.', async t => {
+test('Should fail if the textBody is not included.', async (t) => {
     try {
         const res = await createPost({
             author: "Joe Blows",
@@ -53,7 +53,7 @@ test('Should fail if the textBody is not included.', async t => {
     }
 });
 
-test('Should fail if the author is not included.', async t => {
+test('Should fail if the author is not included.', async (t) => {
     try {
         const res = await createPost({
             textBody: "Home on the range. Where the deer and the antelope plaaaaay.",
