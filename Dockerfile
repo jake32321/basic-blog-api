@@ -1,5 +1,5 @@
 FROM node:carbon
-MAINTAINER Jake j. Reed
+LABEL maintainer="jacob.reed2017@gmail.com"
 
 WORKDIR /usr/src/app
 
