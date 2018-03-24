@@ -6,10 +6,10 @@ const { createUser } = require('../../services/user');
 
 const internals = {
     ids: []
-}
+};
 
-test.after(async t => {
-    internals.ids.forEach(async id => {
+test.after(async (t) => {
+    internals.ids.forEach(async (id) => {
         await admin.database().ref(`users/${id}`).remove();
     });
 
@@ -17,7 +17,7 @@ test.after(async t => {
     await admin.auth().deleteUser(internals.ids[0]);
 });
 
-test('Should be able to create a user when request is formed correctly.', async t => {
+test('Should be able to create a user when request is formed correctly.', async (t) => {
     const result = await createUser({
         disabled: false,
         displayName: "Joe Blows",
@@ -35,7 +35,7 @@ test('Should be able to create a user when request is formed correctly.', async 
     t.is(result.emailVerified, false); 
 });
 
-test('Should fail if missing email.', async t => {
+test('Should fail if missing email.', async (t) => {
     try {
         const result = await createUser({
             disabled: false,
@@ -50,7 +50,7 @@ test('Should fail if missing email.', async t => {
     }
 });
 
-test('Should fail if missing password.', async t => {
+test('Should fail if missing password.', async (t) => {
     try {
         const result = await createUser({
             disabled: false,
@@ -65,7 +65,7 @@ test('Should fail if missing password.', async t => {
     }
 });
 
-test('Should fail if missing displayName.', async t => {
+test('Should fail if missing displayName.', async (t) => {
     try {
         const result = await createUser({
             disabled: false,

@@ -6,9 +6,9 @@ const { updatePost, createPost } = require('../../services/post');
 
 const internals = {
     ids: []
-}
+};
 
-test.before(async t => {
+test.before(async (t) => {
     const reqOne = await createPost({
         title: "This Is A Title",
         author: "Test Author",
@@ -34,13 +34,13 @@ test.before(async t => {
     internals.ids.push(reqThree.id);
 });
 
-test.after(t => {
-    internals.ids.forEach(async id => {
+test.after((t) => {
+    internals.ids.forEach(async (id) => {
         await admin.database().ref(`posts/${id}`).remove();
     });
-})
+});
 
-test('Should pass without title and author', async t => {
+test('Should pass without title and author', async (t) => {
     const req = {
         textBody: "This is the story about..."
     }
@@ -53,7 +53,7 @@ test('Should pass without title and author', async t => {
     t.is(res.textBody, 'This is the story about...');
 });
 
-test('Should pass without textBody and author', async t => {
+test('Should pass without textBody and author', async (t) => {
     const req = {
         title: "The Title"
     }
@@ -66,14 +66,14 @@ test('Should pass without textBody and author', async t => {
     t.is(res.title, 'The Title');
 });
 
-test('Should pass without anything in the request', async t => {
+test('Should pass without anything in the request', async (t) => {
     const req = {}
 
     const res = await updatePost(req, internals.ids[2]);
     t.truthy(res);
 });
 
-test('Should fail with a bad Id', async t => {
+test('Should fail with a bad Id', async (t) => {
     const req = {}
 
     try {
@@ -85,7 +85,7 @@ test('Should fail with a bad Id', async t => {
     }
 });
 
-test(`Should fail if a post with that ID doesn't exist.`, async t => {
+test(`Should fail if a post with that ID doesn't exist.`, async (t) => {
     const req = {}
 
     try {
@@ -97,7 +97,7 @@ test(`Should fail if a post with that ID doesn't exist.`, async t => {
     }
 });
 
-test(`Should fail if a post is poorly formed.`, async t => {
+test(`Should fail if a post is poorly formed.`, async (t) => {
     const req = {
         garbo: 'bad prop'
     }

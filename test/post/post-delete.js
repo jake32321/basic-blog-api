@@ -6,9 +6,9 @@ const { createPost, deletePost } = require('../../services/post');
 
 const internals = {
     ids: []
-}
+};
 
-test.before(async t => {
+test.before(async (t) => {
     const resOne = await createPost({
         title: "This Is A Title",
         author: "Test Author",
@@ -24,13 +24,13 @@ test.after(t => {
     });
 });
 
-test('Should delete a post if the ID matches a post.', async t => {
+test('Should delete a post if the ID matches a post.', async (t) => {
     const res = await deletePost(internals.ids[0]);
 
     t.is(res.message, `Post ${internals.ids[0]}, has been deleted.`);
 });
 
-test('Should fail when a post with an ID cannot be found.', async t => {
+test('Should fail when a post with an ID cannot be found.', async (t) => {
     try {
         const res = await deletePost('HgbY6qw');
     } catch (err) {
@@ -40,7 +40,7 @@ test('Should fail when a post with an ID cannot be found.', async t => {
     }
 });
 
-test('Should fail to retrieve with a bad Id.', async t => {
+test('Should fail to retrieve with a bad Id.', async (t) => {
     try {
         const res = await deletePost('HyUn');
     } catch (err) {

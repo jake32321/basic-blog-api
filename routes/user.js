@@ -1,19 +1,27 @@
-const express = require('express');
+'use strict';
 const user = require('../services/user');
 const router = require('express').Router();
 
 router.post('/', (req, res) => {
-    user.createUser(req.body).then(result => {
+    user.createUser(req.body).then((result) => {
         res.send(result);
-    }).catch(err => {
+    }).catch((err) => {
         res.send(err.output.payload);
     });
 });
 
-router.delete('/:id', (req, res) => {
-    user.deleteUser(req.params.id).then(result => {
+router.delete('/:uid', (req, res) => {
+    user.deleteUser(req.params.uid).then((result) => {
         res.send(result);
-    }).catch(err => {
+    }).catch((err) => {
+        res.send(err.output.payload);
+    });
+});
+
+router.get('/:uid', (req, res) => {
+    user.getUserById(req.params.uid).then((result) => {
+        res.send(result);
+    }).catch((err) => {
         res.send(err.output.payload);
     });
 });

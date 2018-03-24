@@ -9,7 +9,7 @@ const ref = admin.database().ref('/users');
 
 const internals = {
     schemas: {}
-}
+};
 
 internals.schemas.userSchema = Joi.object().keys({
     email: Joi.string().email().required(),
@@ -20,7 +20,7 @@ internals.schemas.userSchema = Joi.object().keys({
 });
 
 exports.createUser = async (req) => {
-    const payload = await Joi.validate(req, internals.schemas.userSchema).catch(err => {
+    const payload = await Joi.validate(req, internals.schemas.userSchema).catch((err) => {
         throw Boom.badRequest(err);
     });
 
@@ -48,4 +48,15 @@ exports.deleteUser = async (id) => {
     await ref.child(id).remove();
 
     return { message: `User with ID: ${id}, has been deleted.` };
-}
+};
+
+exports.getUserById = async (id) => {
+    const exists = await postDataExists(id, ref);
+
+    if (!exists){
+        throw Boom.badRequest(`User with the ID: ${id}, does not exist.`);
+    }
+
+    const snapshot = await ref.child(id).once('value');
+    return snapshot.val();
+};

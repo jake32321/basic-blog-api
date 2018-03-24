@@ -7,9 +7,9 @@ const { createUser, deleteUser } = require('../../services/user');
 
 const internals = {
     ids: []
-}
+};
 
-test.before(async t => {
+test.before(async (t) => {
     const resOne = await createUser({
         displayName: "James Dude",
 	    password: "$omethIngC00l!",
@@ -19,13 +19,13 @@ test.before(async t => {
     internals.ids.push(resOne.uid);
 });
 
-test('Should be able to delete a user.', async t => {
+test('Should be able to delete a user.', async (t) => {
     const res = await deleteUser(internals.ids[0]);
     
     t.truthy(res.message, `User with ID: ${internals.ids[0]}, has been deleted.`);
 });
 
-test('Should fail if a user with the given ID doesn\'t exist.', async t => {
+test('Should fail if a user with the given ID doesn\'t exist.', async (t) => {
     try {
         const res = await deleteUser('HybGft6T');
     } catch (err) {

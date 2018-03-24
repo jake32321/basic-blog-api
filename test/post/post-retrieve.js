@@ -7,7 +7,7 @@ const { getPostById, createPost } = require('../../services/post');
 
 const internals = {
     ids: []
-}
+};
 
 test.before(async t => {
     const resOne = await createPost({
@@ -23,7 +23,7 @@ test.after(t => {
     internals.ids.forEach(async id => {
         await admin.database().ref(`posts/${id}`).remove();
     })
-})
+});
 
 test('Should fail to retrieve with a bad Id.', async t => {
     try {
@@ -35,7 +35,7 @@ test('Should fail to retrieve with a bad Id.', async t => {
     }
 });
 
-test('Should fail if a post with that ID doesn\'t exist.', async t => {
+test('Should fail if a post with that ID doesn\'t exist.', async (t) => {
     try {
         const res = await getPostById('HyT5eWq');
     } catch (err) {
@@ -45,7 +45,7 @@ test('Should fail if a post with that ID doesn\'t exist.', async t => {
     }
 });
 
-test('Should pass if the Id exists.', async t => {
+test('Should pass if the Id exists.', async (t) => {
     const res = await getPostById(internals.ids[0]);
 
     t.truthy(res.title);
