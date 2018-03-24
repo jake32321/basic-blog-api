@@ -20,7 +20,7 @@ test.before(async t => {
 
 test.after(t => {
     internals.ids.forEach(async id => {
-        await deletePost(id);
+        await admin.database().ref(`posts/${id}`).remove();
     });
 });
 

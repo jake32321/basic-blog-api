@@ -2,7 +2,7 @@ require('dotenv/config');
 require('../../lib/db').init();
 const admin = require('firebase-admin');
 const test = require('ava');
-const { getPostById, createPost, deletePost } = require('../../services/post');
+const { getPostById, createPost } = require('../../services/post');
 
 
 const internals = {
@@ -21,7 +21,7 @@ test.before(async t => {
 
 test.after(t => {
     internals.ids.forEach(async id => {
-        await deletePost(id);
+        await admin.database().ref(`posts/${id}`).remove();
     })
 })
 
