@@ -1,4 +1,5 @@
 FROM node:carbon
+MAINTAINER Jake j. Reed
 
 WORKDIR /usr/src/app
 

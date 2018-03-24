@@ -1,7 +1,7 @@
 'use strict';
 const Joi = require('joi');
 const Boom = require('boom')
-const { postDataExists } = require('../lib/helpers');
+const { dataExists } = require('../lib/helpers');
 const admin = require('firebase-admin');
 const shortid = require('shortid');
 const _ = require('lodash');
@@ -48,7 +48,7 @@ exports.getPosts = async () => {
 };
 
 exports.getPostById = async (id) => {
-    const exists = await postDataExists(id, ref);
+    const exists = await dataExists(id, ref);
 
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);
@@ -63,7 +63,7 @@ exports.updatePost = async (req, id) => {
         throw Boom.badRequest('Request poorly formed.');
     });
 
-    const exists = await postDataExists(id, ref);
+    const exists = await dataExists(id, ref);
 
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);
@@ -75,7 +75,7 @@ exports.updatePost = async (req, id) => {
 };
 
 exports.deletePost = async (id) => {
-    const exists = await postDataExists(id, ref);
+    const exists = await dataExists(id, ref);
 
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);

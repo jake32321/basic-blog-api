@@ -1,6 +1,6 @@
+'use strict';
 require('dotenv/config');
 require('../../lib/db').init();
-const admin = require('firebase-admin');
 const test = require('ava');
 const { getPosts } = require('../../services/post');
 

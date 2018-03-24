@@ -9,19 +9,19 @@ const internals = {
     ids: []
 };
 
-test.before(async (t) => {
+test.before(async () => {
     const resOne = await createUser({
         disabled: false,
-        displayName: "Joe Blows",
-        email: "test123@test.com",
-        password: "c00lPa$$",
+        displayName: 'Joe Blows',
+        email: 'test123@test.com',
+        password: 'c00lPa$$',
         emailVerified: false
     });
 
     internals.ids.push(resOne.uid);
 });
 
-test.after(async (t) => {
+test.after(async () => {
     internals.ids.forEach(async (id) => {
         await admin.database().ref(`users/${id}`).remove();
     });
@@ -31,7 +31,7 @@ test.after(async (t) => {
 
 test('Should fail to retrieve with a bad Id.', async (t) => {
     try {
-        const res = await getUserById('GtHO54');
+        await getUserById('GtHO54');
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
@@ -41,7 +41,7 @@ test('Should fail to retrieve with a bad Id.', async (t) => {
 
 test('Should fail if a post with that ID doesn\'t exist.', async (t) => {
     try {
-        const res = await getUserById('HyT5eWq');
+        await getUserById('HyT5eWq');
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
@@ -53,7 +53,7 @@ test('Should pass if the Id exists.', async (t) => {
     const res = await getUserById(internals.ids[0]);
 
     t.is(res.disabled, false);
-    t.is(res.displayName, "Joe Blows");
-    t.is(res.email, "test123@test.com");
+    t.is(res.displayName, 'Joe Blows');
+    t.is(res.email, 'test123@test.com');
     t.is(res.emailVerified, false)
 });

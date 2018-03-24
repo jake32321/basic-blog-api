@@ -1,3 +1,4 @@
+'use strict';
 require('dotenv/config');
 require('../../lib/db').init();
 const admin = require('firebase-admin');
@@ -8,17 +9,17 @@ const internals = {
     ids: []
 };
 
-test.before(async (t) => {
+test.before(async () => {
     const resOne = await createPost({
-        title: "This Is A Title",
-        author: "Test Author",
-        textBody: "I blessed the rains down in Africaaaaa!"
+        title: 'This Is A Title',
+        author: 'Test Author',
+        textBody: 'I blessed the rains down in Africaaaaa!'
     });
 
     internals.ids.push(resOne.id);
 });
 
-test.after(t => {
+test.after(() => {
     internals.ids.forEach(async id => {
         await admin.database().ref(`posts/${id}`).remove();
     });
@@ -32,7 +33,7 @@ test('Should delete a post if the ID matches a post.', async (t) => {
 
 test('Should fail when a post with an ID cannot be found.', async (t) => {
     try {
-        const res = await deletePost('HgbY6qw');
+        await deletePost('HgbY6qw');
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
@@ -42,7 +43,7 @@ test('Should fail when a post with an ID cannot be found.', async (t) => {
 
 test('Should fail to retrieve with a bad Id.', async (t) => {
     try {
-        const res = await deletePost('HyUn');
+        await deletePost('HyUn');
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');

@@ -1,7 +1,7 @@
 'use strict';
 const Joi = require('joi');
 const Boom = require('boom');
-const { postDataExists } = require('../lib/helpers');
+const { dataExists } = require('../lib/helpers');
 const admin = require('firebase-admin');
 const _ = require('lodash');
 const shortid = require('shortid');
@@ -38,7 +38,7 @@ exports.createUser = async (req) => {
 };
 
 exports.deleteUser = async (id) => {
-    const exists = await postDataExists(id, ref);
+    const exists = await dataExists(id, ref);
     
     if (!exists) {
         throw Boom.badRequest(`User with the ID: ${id}, does not exist.`);
@@ -51,7 +51,7 @@ exports.deleteUser = async (id) => {
 };
 
 exports.getUserById = async (id) => {
-    const exists = await postDataExists(id, ref);
+    const exists = await dataExists(id, ref);
 
     if (!exists){
         throw Boom.badRequest(`User with the ID: ${id}, does not exist.`);
