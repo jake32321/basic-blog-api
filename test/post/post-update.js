@@ -1,3 +1,4 @@
+'use strict';
 require('dotenv/config');
 require('../../lib/db').init();
 const admin = require('firebase-admin');
@@ -8,33 +9,33 @@ const internals = {
     ids: []
 };
 
-test.before(async (t) => {
+test.before(async () => {
     const reqOne = await createPost({
-        title: "This Is A Title",
-        author: "Test Author",
-        textBody: "I blessed the rains down in Africaaaaa!"
+        title: 'This Is A Title',
+        author: 'Test Author',
+        textBody: 'I blessed the rains down in Africaaaaa!'
     });
 
     internals.ids.push(reqOne.id);
 
     const reqTwo = await createPost({
-        title: "This Is A Title 2",
-        author: "Test Author 2",
-        textBody: "I blessed the rains down in Africaaaaa! 2"
+        title: 'This Is A Title 2',
+        author: 'Test Author 2',
+        textBody: 'I blessed the rains down in Africaaaaa! 2'
     });
 
     internals.ids.push(reqTwo.id);
 
     const reqThree = await createPost({
-        title: "This Is A Title 2",
-        author: "Test Author 2",
-        textBody: "I blessed the rains down in Africaaaaa! 2"
+        title: 'This Is A Title 2',
+        author: 'Test Author 2',
+        textBody: 'I blessed the rains down in Africaaaaa! 2'
     });
 
     internals.ids.push(reqThree.id);
 });
 
-test.after((t) => {
+test.after(() => {
     internals.ids.forEach(async (id) => {
         await admin.database().ref(`posts/${id}`).remove();
     });
@@ -42,7 +43,7 @@ test.after((t) => {
 
 test('Should pass without title and author', async (t) => {
     const req = {
-        textBody: "This is the story about..."
+        textBody: 'This is the story about...'
     }
 
     const res = await updatePost(req, internals.ids[0]);
@@ -55,7 +56,7 @@ test('Should pass without title and author', async (t) => {
 
 test('Should pass without textBody and author', async (t) => {
     const req = {
-        title: "The Title"
+        title: 'The Title'
     }
 
     const res = await updatePost(req, internals.ids[0]);
@@ -77,7 +78,7 @@ test('Should fail with a bad Id', async (t) => {
     const req = {}
 
     try {
-        const res = await updatePost(req, 'Gt54');
+        await updatePost(req, 'Gt54');
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
@@ -85,11 +86,11 @@ test('Should fail with a bad Id', async (t) => {
     }
 });
 
-test(`Should fail if a post with that ID doesn't exist.`, async (t) => {
+test('Should fail if a post with that ID doesn\'t exist.', async (t) => {
     const req = {}
 
     try {
-        const res = await updatePost(req, 'HyT5eWq');
+        await updatePost(req, 'HyT5eWq');
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
@@ -97,13 +98,13 @@ test(`Should fail if a post with that ID doesn't exist.`, async (t) => {
     }
 });
 
-test(`Should fail if a post is poorly formed.`, async (t) => {
+test('Should fail if a post is poorly formed.', async (t) => {
     const req = {
         garbo: 'bad prop'
     }
 
     try {
-        const res = await updatePost(req, internals.ids[1]);
+        await updatePost(req, internals.ids[1]);
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');

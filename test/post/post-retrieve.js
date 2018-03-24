@@ -1,3 +1,4 @@
+'use strict';
 require('dotenv/config');
 require('../../lib/db').init();
 const admin = require('firebase-admin');
@@ -9,17 +10,17 @@ const internals = {
     ids: []
 };
 
-test.before(async t => {
+test.before(async () => {
     const resOne = await createPost({
-        title: "This Is A Title",
-        author: "Test Author",
-        textBody: "I blessed the rains down in Africaaaaa!"
+        title: 'This Is A Title',
+        author: 'Test Author',
+        textBody: 'I blessed the rains down in Africaaaaa!'
     });
 
     internals.ids.push(resOne.id);
 });
 
-test.after(t => {
+test.after(() => {
     internals.ids.forEach(async id => {
         await admin.database().ref(`posts/${id}`).remove();
     })
@@ -27,7 +28,7 @@ test.after(t => {
 
 test('Should fail to retrieve with a bad Id.', async t => {
     try {
-        const res = await getPostById('GtHO54');
+        await getPostById('GtHO54');
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
@@ -37,11 +38,11 @@ test('Should fail to retrieve with a bad Id.', async t => {
 
 test('Should fail if a post with that ID doesn\'t exist.', async (t) => {
     try {
-        const res = await getPostById('HyT5eWq');
+        await getPostById('HyT5eWq');
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');
-        t.is(err.output.payload.message, `Could not find Post with ID: HyT5eWq`);
+        t.is(err.output.payload.message, 'Could not find Post with ID: HyT5eWq');
     }
 });
 

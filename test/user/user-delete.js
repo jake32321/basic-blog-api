@@ -1,7 +1,6 @@
 'use strict';
 require('dotenv/config');
 require('../../lib/db').init();
-const admin = require('firebase-admin');
 const test = require('ava');
 const { createUser, deleteUser } = require('../../services/user');
 
@@ -9,11 +8,11 @@ const internals = {
     ids: []
 };
 
-test.before(async (t) => {
+test.before(async () => {
     const resOne = await createUser({
-        displayName: "James Dude",
-	    password: "$omethIngC00l!",
-	    email: "testhello@test.com"
+        displayName: 'James Dude',
+	    password: '$omethIngC00l!',
+	    email: 'testhello@test.com'
     });
 
     internals.ids.push(resOne.uid);
@@ -27,7 +26,7 @@ test('Should be able to delete a user.', async (t) => {
 
 test('Should fail if a user with the given ID doesn\'t exist.', async (t) => {
     try {
-        const res = await deleteUser('HybGft6T');
+        await deleteUser('HybGft6T');
     } catch (err) {
         t.is(err.output.payload.statusCode, 400);
         t.is(err.output.payload.error, 'Bad Request');

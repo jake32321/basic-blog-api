@@ -1,3 +1,4 @@
+'use strict'
 require('dotenv/config');
 require('../../lib/db').init();
 const admin = require('firebase-admin');
@@ -8,7 +9,7 @@ const internals = {
     ids: []
 };
 
-test.after(async (t) => {
+test.after(async () => {
     internals.ids.forEach(async (id) => {
         await admin.database().ref(`users/${id}`).remove();
     });
@@ -20,9 +21,9 @@ test.after(async (t) => {
 test('Should be able to create a user when request is formed correctly.', async (t) => {
     const result = await createUser({
         disabled: false,
-        displayName: "Joe Blows",
-        email: "test@test.com",
-        password: "c00lPa$$",
+        displayName: 'Joe Blows',
+        email: 'test@test.com',
+        password: 'c00lPa$$',
         emailVerified: false
     });
 
@@ -30,17 +31,17 @@ test('Should be able to create a user when request is formed correctly.', async 
 
     t.truthy(result.uid);
     t.is(result.disabled, false);
-    t.is(result.displayName, "Joe Blows");
-    t.is(result.email, "test@test.com");
+    t.is(result.displayName, 'Joe Blows');
+    t.is(result.email, 'test@test.com');
     t.is(result.emailVerified, false); 
 });
 
 test('Should fail if missing email.', async (t) => {
     try {
-        const result = await createUser({
+        await createUser({
             disabled: false,
-            displayName: "Joe Blows",
-            password: "c00lPa$$",
+            displayName: 'Joe Blows',
+            password: 'c00lPa$$',
             emailVerified: false
         });
     } catch (err) {
@@ -52,10 +53,10 @@ test('Should fail if missing email.', async (t) => {
 
 test('Should fail if missing password.', async (t) => {
     try {
-        const result = await createUser({
+        await createUser({
             disabled: false,
-            displayName: "Joe Blows",
-            email: "test@test.com",
+            displayName: 'Joe Blows',
+            email: 'test@test.com',
             emailVerified: false
         });
     } catch (err) {
@@ -67,10 +68,10 @@ test('Should fail if missing password.', async (t) => {
 
 test('Should fail if missing displayName.', async (t) => {
     try {
-        const result = await createUser({
+        await createUser({
             disabled: false,
-            email: "test@test.com",
-            password: "c00lPa$$",
+            email: 'test@test.com',
+            password: 'c00lPa$$',
             emailVerified: false
         });
     } catch (err) {
