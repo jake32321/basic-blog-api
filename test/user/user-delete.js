@@ -7,7 +7,7 @@ const { createUser, deleteUser } = require('../../services/user');
 
 const internals = {
     ids: []
-}
+};
 
 test.before(async t => {
     const resOne = await createUser({

@@ -6,7 +6,7 @@ const { createPost, deletePost } = require('../../services/post');
 
 const internals = {
     ids: []
-}
+};
 
 test.before(async t => {
     const resOne = await createPost({

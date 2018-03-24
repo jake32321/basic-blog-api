@@ -9,7 +9,7 @@ const ref = admin.database().ref('/posts');
 
 const internals = {
     schemas: {}
-}
+};
 
 internals.schemas.postSchema = Joi.object().keys({
     title: Joi.string().required(),
@@ -50,10 +50,10 @@ exports.getPostById = async (id) => {
     const exists = await postDataExists(id, ref);
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);
-    }
+    };
     const snapshot = await ref.child(id).once('value');
     return snapshot.val();
-}
+};
 
 exports.updatePost = async (req, id) => { 
     const result = await Joi.validate(req, internals.schemas.updatePostSchema).catch(error => {
@@ -64,22 +64,22 @@ exports.updatePost = async (req, id) => {
 
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);
-    }
+    };
 
     await ref.child(id).update(req);
     const snapshot = await ref.child(id).once('value');
     return snapshot.val();
-}
+};
 
 exports.deletePost = async (id) => {
     const exists = await postDataExists(id, ref);
 
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);
-    }
+    };
 
     await ref.child(id).remove();
     return { message: `Post ${id}, has been deleted.` };
-}
+};
 
         

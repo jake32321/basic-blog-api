@@ -6,7 +6,7 @@ const { updatePost, createPost } = require('../../services/post');
 
 const internals = {
     ids: []
-}
+};
 
 test.before(async t => {
     const reqOne = await createPost({
@@ -38,7 +38,7 @@ test.after(t => {
     internals.ids.forEach(async id => {
         await admin.database().ref(`posts/${id}`).remove();
     });
-})
+});
 
 test('Should pass without title and author', async t => {
     const req = {

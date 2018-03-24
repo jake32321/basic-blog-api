@@ -8,4 +8,4 @@ test('Should be able to get all the posts.', async t => {
     const res = await getPosts();
 
     t.truthy(res);
-})
+});

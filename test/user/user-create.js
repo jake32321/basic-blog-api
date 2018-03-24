@@ -6,7 +6,7 @@ const { createUser } = require('../../services/user');
 
 const internals = {
     ids: []
-}
+};
 
 test.after(async t => {
     internals.ids.forEach(async id => {

@@ -7,7 +7,7 @@ const { getPostById, createPost } = require('../../services/post');
 
 const internals = {
     ids: []
-}
+};
 
 test.before(async t => {
     const resOne = await createPost({
@@ -23,7 +23,7 @@ test.after(t => {
     internals.ids.forEach(async id => {
         await admin.database().ref(`posts/${id}`).remove();
     })
-})
+});
 
 test('Should fail to retrieve with a bad Id.', async t => {
     try {

@@ -6,7 +6,7 @@ const { createPost } = require('../../services/post');
 
 const internals = {
     ids: []
-}
+};
 
 
 test.after(t => {

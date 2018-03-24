@@ -10,8 +10,16 @@ router.post('/', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
-    user.deleteUser(req.params.id).then(result => {
+router.delete('/:uid', (req, res) => {
+    user.deleteUser(req.params.uid).then(result => {
+        res.send(result);
+    }).catch(err => {
+        res.send(err.output.payload);
+    });
+});
+
+router.get('/:uid', (req, res) => {
+    user.getUserById(req.params.uid).then(result => {
         res.send(result);
     }).catch(err => {
         res.send(err.output.payload);
