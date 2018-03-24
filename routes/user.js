@@ -1,13 +1,20 @@
 const express = require('express');
-const Boom = require('boom');
 const user = require('../services/user');
 const router = require('express').Router();
 
 router.post('/', (req, res) => {
     user.createUser(req.body).then(result => {
         res.send(result);
-    }).catch(error => {
-        res.send(error);
+    }).catch(err => {
+        res.send(err.output.payload);
+    });
+});
+
+router.delete('/:id', (req, res) => {
+    user.deleteUser(req.params.id).then(result => {
+        res.send(result);
+    }).catch(err => {
+        res.send(err.output.payload);
     });
 });
 

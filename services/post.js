@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const Boom = require('boom')
+const { postDataExists } = require('../lib/helpers');
 const admin = require('firebase-admin');
 const shortid = require('shortid');
 const _ = require('lodash');
@@ -24,19 +25,6 @@ internals.schemas.updatePostSchema = Joi.object().keys({
     date: Joi.date()
 });
 
-internals.schemas.isValidShortId = Joi.string().regex(/^[a-zA-Z0-9_-]{7,14}$/).required();
-
-postDataExists = async (id) => {
-    const payload = await Joi.validate(id, internals.schemas.isValidShortId).catch(error => {
-        throw Boom.badRequest('Id is not valid.');
-    });
-
-    const snapshot = await ref.child(payload).once('value');
-
-    const exists = snapshot.val() ? true : false;
-    return exists;
-};
-
 exports.createPost = async (req) => {
     const postId = shortid.generate();
     const payload = await Joi.validate(req, internals.schemas.postSchema).catch(error => {
@@ -59,7 +47,7 @@ exports.getPosts = async (req) => {
 };
 
 exports.getPostById = async (id) => {
-    const exists = await postDataExists(id);
+    const exists = await postDataExists(id, ref);
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);
     }
@@ -72,7 +60,7 @@ exports.updatePost = async (req, id) => {
         throw Boom.badRequest('Request poorly formed.');
     });
 
-    const exists = await postDataExists(id);
+    const exists = await postDataExists(id, ref);
 
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);
@@ -84,7 +72,7 @@ exports.updatePost = async (req, id) => {
 }
 
 exports.deletePost = async (id) => {
-    const exists = await postDataExists(id);
+    const exists = await postDataExists(id, ref);
 
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);

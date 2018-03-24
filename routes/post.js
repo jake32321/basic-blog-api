@@ -1,5 +1,4 @@
 const express = require('express');
-const Boom = require('boom');
 const post = require('../services/post');
 const router = require('express').Router();
 
