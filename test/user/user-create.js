@@ -26,9 +26,9 @@ test('Should be able to create a user when request is formed correctly.', async 
         emailVerified: false
     });
 
-    internals.ids.push(result.id);
+    internals.ids.push(result.uid);
 
-    t.truthy(result.id);
+    t.truthy(result.uid);
     t.is(result.disabled, false);
     t.is(result.displayName, "Joe Blows");
     t.is(result.email, "test@test.com");

@@ -1,7 +1,10 @@
+'use strict';
 const Joi = require('joi');
 const Boom = require('boom');
+const { postDataExists } = require('../lib/helpers');
 const admin = require('firebase-admin');
 const _ = require('lodash');
+const shortid = require('shortid');
 const ref = admin.database().ref('/users');
 
 const internals = {
@@ -21,14 +24,28 @@ exports.createUser = async (req) => {
         throw Boom.badRequest(err);
     });
 
-    const userInfo = await admin.auth().createUser(payload);
-
-    const userRef = ref.child(userInfo.uid);
-    const dataToFB = _.pick(payload, ['email', 'emailVerified', 'displayName', 'disabled']);
-
-    await userRef.set(dataToFB);  
-    const userData = await userRef.once('value');
-    return _.extend(userData.val(), {
-        id: userInfo.uid
+    _.extend(payload, {
+        uid: shortid.generate()
     });
+
+    const dataToFB = _.pick(payload, ['email', 'emailVerified', 'displayName', 'disabled']);
+    const responseData = _.pick(payload, ['uid', 'email', 'emailVerified', 'displayName', 'disabled']);
+
+    await admin.auth().createUser(payload);
+    await ref.child(payload.uid).set(dataToFB);  
+
+    return responseData;
 };
+
+exports.deleteUser = async (id) => {
+    const exists = await postDataExists(id, ref);
+    
+    if (!exists) {
+        throw Boom.badRequest(`User with the ID: ${id}, does not exist.`);
+    }
+
+    await admin.auth().deleteUser(id);
+    await ref.child(id).remove();
+
+    return { message: `User with ID: ${id}, has been deleted.` };
+}
