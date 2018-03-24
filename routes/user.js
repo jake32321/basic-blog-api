@@ -1,4 +1,4 @@
-const express = require('express');
+'use strict';
 const user = require('../services/user');
 const router = require('express').Router();
 

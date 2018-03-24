@@ -1,3 +1,4 @@
+'use strict';
 const Joi = require('joi');
 const Boom = require('boom')
 const { postDataExists } = require('../lib/helpers');
@@ -27,7 +28,7 @@ internals.schemas.updatePostSchema = Joi.object().keys({
 
 exports.createPost = async (req) => {
     const postId = shortid.generate();
-    const payload = await Joi.validate(req, internals.schemas.postSchema).catch(err => {
+    await Joi.validate(req, internals.schemas.postSchema).catch(err => {
         throw Boom.badRequest(err);
     });
 
@@ -42,7 +43,7 @@ exports.createPost = async (req) => {
     return dataToPost;
 };
 
-exports.getPosts = async (req) => {
+exports.getPosts = async () => {
     return await ref.once('value');
 };
 
@@ -51,13 +52,14 @@ exports.getPostById = async (id) => {
 
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);
-    };
+    }
+
     const snapshot = await ref.child(id).once('value');
     return snapshot.val();
 };
 
 exports.updatePost = async (req, id) => { 
-    const result = await Joi.validate(req, internals.schemas.updatePostSchema).catch((err) => {
+    await Joi.validate(req, internals.schemas.updatePostSchema).catch(() => {
         throw Boom.badRequest('Request poorly formed.');
     });
 
@@ -65,7 +67,7 @@ exports.updatePost = async (req, id) => {
 
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);
-    };
+    }
 
     await ref.child(id).update(req);
     const snapshot = await ref.child(id).once('value');
@@ -77,7 +79,7 @@ exports.deletePost = async (id) => {
 
     if (!exists) {
         throw Boom.badRequest(`Could not find Post with ID: ${id}`);
-    };
+    }
 
     await ref.child(id).remove();
     return { message: `Post ${id}, has been deleted.` };

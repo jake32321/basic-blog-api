@@ -1,12 +1,16 @@
 {
+    "parserOptions": {
+        "ecmaVersion": 8
+    },
     "env": {
-        "node": true
+        "node": true,    
+        "es6": true
     },
     "extends": "eslint:recommended",
     "rules": {
-        "comma-dangle": [1,"always"],
+        "comma-dangle": [1,"never"],
         "no-cond-assign": [1,"always"],
-        "no-console": 1,
+        "no-console": 0,
         "no-constant-condition": 1,
         "no-control-regex": 1,
         "no-debugger": 1,
@@ -36,6 +40,6 @@
         "no-undef": 1,
         "no-unused-vars": 1,
         "no-mixed-spaces-and-tabs": [1,"smart-tabs"],
-        "quotes": [1,"backtick","avoid-escape"]
+        "quotes": [1,"single","avoid-escape"]
     }
 }

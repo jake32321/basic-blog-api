@@ -1,4 +1,4 @@
-const express = require('express');
+'use strict';
 const post = require('../services/post');
 const router = require('express').Router();
 
