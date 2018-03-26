@@ -1,0 +1,49 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:7.10 
+    working_directory: ~/basic-blog-api
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run: npm test
+      - run: npm run coverage
+    
+  deploy:
+    filters:
+      branches:
+        only:
+          - master
+    machine:
+      enabled: true
+      services:
+        - docker 
+    working_directory: ~/basic-blog-api
+    steps:
+      - checkout
+      - run:
+          name: Setup Heroku
+          command: bash .circleci/setup_heroku.sh
+      - run: 
+          command: |
+            docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+            docker build --rm=false -t registry.heroku.com/blog-api-backend/web -f Dockerfile .
+            docker push registry.heroku.com/blog-api-backend/web
+  
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build

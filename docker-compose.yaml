@@ -1,10 +1,26 @@
 version: '3'
 services: 
+  poste:
+    image: analogic/poste.io
+    volumes:
+      - /etc/localtime:/etc/localtime:ro \
+    expose:
+      - "25"
+      - "80"
+      - "110"
+      - "143"
+      - "443"
+      - "465"
+      - "587"
+      - "993"
+      - "995"
+
   blog-api: 
     build: . 
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - poste
     ports: 
       - "3000:3000"
-    

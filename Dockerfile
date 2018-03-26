@@ -1,4 +1,5 @@
 FROM node:carbon
+LABEL maintainer="jacob.reed2017@gmail.com"
 
 WORKDIR /usr/src/app
 

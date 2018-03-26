@@ -1,13 +1,16 @@
+'use strict';
 const Joi = require('joi');
 const Boom = require('boom')
-const firebase = require('firebase');
-const db = require('./../lib/db');
+const { dataExists } = require('../lib/helpers');
+const admin = require('firebase-admin');
 const shortid = require('shortid');
-const ref = db.firebase.database().ref('/posts');
+const _ = require('lodash');
+const moment = require('moment');
+const ref = admin.database().ref('/posts');
 
 const internals = {
     schemas: {}
-}
+};
 
 internals.schemas.postSchema = Joi.object().keys({
     title: Joi.string().required(),
@@ -23,73 +26,63 @@ internals.schemas.updatePostSchema = Joi.object().keys({
     date: Joi.date()
 });
 
-internals.schemas.isValidShortId = Joi.string().regex(/^[a-zA-Z0-9_-]{7,14}$/).required();
-
-exports.createPost = function(req) {
-    const result = Joi.validate(req, internals.schemas.postSchema)
-
-    if (result.error == null) {
-        let res = {
-            title: req.title,
-            author: req.author,
-            textBody: req.textBody,
-            date: new Date().toISOString()
-        }
-    
-        const postId = shortid.generate()
-        ref.child(postId).set(res);
-        res.id = postId;
-        return res;
-    } else {
-        throw Boom.badRequest(result.error);
-    }
-};
-
-exports.getPosts = async function(req){
-    return await ref.once('value').then(snapshot => {
-        return snapshot.val();
+exports.createPost = async (req) => {
+    const postId = shortid.generate();
+    await Joi.validate(req, internals.schemas.postSchema).catch(err => {
+        throw Boom.badRequest(err);
     });
+
+    const dataToPost = _.pick(req, ['title', 'author', 'textBody']);
+
+    _.extend(dataToPost, {
+        id: postId,
+        date: moment().toISOString()
+    });
+
+    await ref.child(postId).set(dataToPost);
+    return dataToPost;
 };
 
-exports.getPostById = async function(id){
-    const result = Joi.validate(id, internals.schemas.isValidShortId);
-    if (result.error === null){
-        let data;
-        const postByIdRef = ref.child(id);
-        await postByIdRef.once('value').then(snapshot => {
-            if (snapshot.val() !== null) {
-                data = snapshot.val();
-            } else {
-                throw Boom.badRequest('Could not find a post with that Id.');
-            }
-        });
-        return data;
-    } else {
-        throw Boom.badRequest('Id is not valid');
-    }
-}
+exports.getPosts = async () => {
+    return await ref.once('value');
+};
 
-exports.updatePost = async function(req, id){
-    const resultReq = Joi.validate(req, internals.schemas.updatePostSchema);
-    const resultId = Joi.validate(id, internals.schemas.isValidShortId);
+exports.getPostById = async (id) => {
+    const exists = await dataExists(id, ref);
 
-    if (resultId.error === null) {
-        if (resultReq.error === null){
-            let data;
-            const postByIdRef = ref.child(id);
-            postByIdRef.update(req);
-            await postByIdRef.once('value').then(snapshot => {
-                if (snapshot.val() !== null) {
-                    data = snapshot.val();
-                } else {
-                    throw Boom.badRequest('Could not find a post with that Id.');
-                }
-            })
-            return data;
-        } else {
-            throw Boom.badRequest(resultReq.error);
-        }
-    } else {
-        throw Boom.badRequest('Id is not valid');
+    if (!exists) {
+        throw Boom.badRequest(`Could not find Post with ID: ${id}`);
     }
-}
+
+    const snapshot = await ref.child(id).once('value');
+    return snapshot.val();
+};
+
+exports.updatePost = async (req, id) => { 
+    await Joi.validate(req, internals.schemas.updatePostSchema).catch(() => {
+        throw Boom.badRequest('Request poorly formed.');
+    });
+
+    const exists = await dataExists(id, ref);
+
+    if (!exists) {
+        throw Boom.badRequest(`Could not find Post with ID: ${id}`);
+    }
+
+    await ref.child(id).update(req);
+    const snapshot = await ref.child(id).once('value');
+    return snapshot.val();
+};
+
+exports.deletePost = async (id) => {
+    const exists = await dataExists(id, ref);
+
+    if (!exists) {
+        throw Boom.badRequest(`Could not find Post with ID: ${id}`);
+    }
+
+    await ref.child(id).remove();
+    return { message: `Post ${id}, has been deleted.` };
+};
+
+        
