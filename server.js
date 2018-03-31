@@ -3,7 +3,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./lib/db');
 
-// Startup firebase
 db.init();
 
 // Get the routes

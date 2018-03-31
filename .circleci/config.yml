@@ -18,7 +18,7 @@ jobs:
       - run: npm test
       - run: npm run coverage
     
-  deploy:
+  deploy-campfire:
     filters:
       branches:
         only:
@@ -27,7 +27,7 @@ jobs:
       enabled: true
       services:
         - docker 
-    working_directory: ~/basic-blog-api
+    working_directory: ~/campfire
     steps:
       - checkout
       - run:
@@ -36,14 +36,38 @@ jobs:
       - run: 
           command: |
             docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-            docker build --rm=false -t registry.heroku.com/blog-api-backend/web -f Dockerfile .
+            docker build --rm=false -t registry.heroku.com/blog-api-backend/web -f Dockerfile.campfire .
             docker push registry.heroku.com/blog-api-backend/web
+
+  deploy-swagger:
+    filters:
+      branches:
+        only:
+          - master
+    machine:
+      enabled: true
+      services:
+        - docker
+    working_directory: ~/campfire/docs
+    steps:
+      - checkout
+      - run:
+          name: Setup Heroku
+          command: bash .circleci/setup_heroku.sh
+      - run: 
+          command: |
+            docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+            docker build --rm=false -t registry.heroku.com/campfire-docs/web -f Dockerfile.swagger .
+            docker push registry.heroku.com/campfire-docs/web
   
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - build
-      - deploy:
+      - deploy-campfire:
+          requires:
+            - build
+      - deploy-swagger:
           requires:
             - build

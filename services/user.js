@@ -19,6 +19,11 @@ internals.schemas.userSchema = Joi.object().keys({
     disabled: Joi.boolean().default(false)
 });
 
+// internals.schemas.updateUserSchema = Joi.object().keys({
+//     email: Joi.string().email().optional(),
+//     password
+// });
+
 exports.createUser = async (req) => {
     const payload = await Joi.validate(req, internals.schemas.userSchema).catch((err) => {
         throw Boom.badRequest(err);
@@ -60,3 +65,9 @@ exports.getUserById = async (id) => {
     const snapshot = await ref.child(id).once('value');
     return snapshot.val();
 };
+
+// exports.updateUser = async (id, req) => {
+//     const payload = await Joi.validate();
+
+//     const exists = await dataExists(id, ref);
+// }
