@@ -48,9 +48,12 @@ jobs:
       enabled: true
       services:
         - docker
-    working_directory: ./docs
+    working_directory: ~/campfire
     steps:
       - checkout
+      - run: 
+          name: Change Directory
+          command: cd docs
       - run:
           name: Setup Heroku
           command: bash .circleci/setup_heroku.sh
