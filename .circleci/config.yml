@@ -48,7 +48,7 @@ jobs:
       enabled: true
       services:
         - docker
-    working_directory: ~/campfire/docs
+    working_directory: ./docs
     steps:
       - checkout
       - run:
