@@ -1,26 +1,18 @@
 version: '3'
 services: 
-  poste:
-    image: analogic/poste.io
-    volumes:
-      - /etc/localtime:/etc/localtime:ro \
-    expose:
-      - "25"
-      - "80"
-      - "110"
-      - "143"
-      - "443"
-      - "465"
-      - "587"
-      - "993"
-      - "995"
-
   blog-api: 
     build: . 
+    depends_on:
+      - swagger-ui
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules
-    depends_on:
-      - poste
+      - ./node_modules:/usr/src/app/node_modules
     ports: 
       - "3000:3000"
+  
+  swagger-ui:
+    image:  "swaggerapi/swagger-ui"
+    environment:
+      - API_URL="http://petstore.swagger.io/v2/swagger.json"
+    ports: 
+      - "8080:8080"

@@ -36,8 +36,7 @@ exports.createUser = async (req) => {
     const dataToFB = _.pick(payload, ['email', 'emailVerified', 'displayName', 'disabled']);
     const responseData = _.pick(payload, ['uid', 'email', 'emailVerified', 'displayName', 'disabled']);
 
-    const user = await admin.auth().createUser(payload);
-    // await user.sendEmailVerification();
+    await admin.auth().createUser(payload);
     await ref.child(payload.uid).set(dataToFB);  
 
     return responseData;
