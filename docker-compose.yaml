@@ -2,17 +2,8 @@ version: '3'
 services: 
   blog-api: 
     build: . 
-    depends_on:
-      - swagger-ui
     volumes:
       - .:/usr/src/app
       - ./node_modules:/usr/src/app/node_modules
     ports: 
       - "3000:3000"
-  
-  swagger-ui:
-    image:  "swaggerapi/swagger-ui"
-    environment:
-      - API_URL="http://petstore.swagger.io/v2/swagger.json"
-    ports: 
-      - "8080:8080"
