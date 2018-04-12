@@ -24,7 +24,7 @@ internals.schemas.userSchema = Joi.object().keys({
 //     password
 // });
 
-exports.createUser = async (req) => {
+exports.createUser = async function(req) {
     const payload = await Joi.validate(req, internals.schemas.userSchema).catch((err) => {
         throw Boom.badRequest(err);
     });
@@ -42,7 +42,7 @@ exports.createUser = async (req) => {
     return responseData;
 };
 
-exports.deleteUser = async (id) => {
+exports.deleteUser = async function(id) {
     const exists = await dataExists(id, ref);
     
     if (!exists) {
@@ -55,7 +55,7 @@ exports.deleteUser = async (id) => {
     return { message: `User with ID: ${id}, has been deleted.` };
 };
 
-exports.getUserById = async (id) => {
+exports.getUserById = async function(id) {
     const exists = await dataExists(id, ref);
 
     if (!exists){

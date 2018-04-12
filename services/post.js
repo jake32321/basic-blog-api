@@ -26,7 +26,7 @@ internals.schemas.updatePostSchema = Joi.object().keys({
     date: Joi.date()
 });
 
-exports.createPost = async (req) => {
+exports.createPost = async function(req) {
     const postId = shortid.generate();
     await Joi.validate(req, internals.schemas.postSchema).catch(err => {
         throw Boom.badRequest(err);
@@ -43,11 +43,11 @@ exports.createPost = async (req) => {
     return dataToPost;
 };
 
-exports.getPosts = async () => {
+exports.getPosts = async function() {
     return await ref.once('value');
 };
 
-exports.getPostById = async (id) => {
+exports.getPostById = async function(id) {
     const exists = await dataExists(id, ref);
 
     if (!exists) {
@@ -58,7 +58,7 @@ exports.getPostById = async (id) => {
     return snapshot.val();
 };
 
-exports.updatePost = async (req, id) => { 
+exports.updatePost = async function(req, id) { 
     await Joi.validate(req, internals.schemas.updatePostSchema).catch(() => {
         throw Boom.badRequest('Request poorly formed.');
     });
@@ -74,7 +74,7 @@ exports.updatePost = async (req, id) => {
     return snapshot.val();
 };
 
-exports.deletePost = async (id) => {
+exports.deletePost = async function(id) {
     const exists = await dataExists(id, ref);
 
     if (!exists) {
