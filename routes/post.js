@@ -6,6 +6,7 @@ router.get('/', (req, res) => {
     post.getPosts().then((result) => {
         res.send(result);
     }).catch((err) => {
+        console.log(err)
         res.send(err.output.payload);
     });
 });
