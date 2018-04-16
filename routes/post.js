@@ -1,9 +1,11 @@
 'use strict';
 const post = require('../services/post');
 const router = require('express').Router();
+const info = require('../lib/logger').infoLog;
 
 router.get('/', (req, res) => {
     post.getPosts().then((result) => {
+        info.info('')
         res.send(result);
     }).catch((err) => {
         console.log(err)

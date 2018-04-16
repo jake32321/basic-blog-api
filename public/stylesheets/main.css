@@ -1,0 +1,36 @@
+html, body {
+    margin: 0px;
+    overflow-x: hidden;
+    height: 100%;
+    background-color: #eae0c2
+}
+
+#wrapper {
+    position: relative;
+}
+
+#banner img {
+    padding: 30px;
+    -webkit-filter: drop-shadow(10px 10px 10px #222);
+    filter: drop-shadow(10px 10px 10px #222);
+    z-index: 1;
+}
+
+#banner::after {
+    content: "";
+    display:block;
+    background-color: orange;
+    width:200%;
+    height:600px;
+    position:absolute;
+    left:-30%;
+    top:-60%;
+    z-index: 0;
+    transform: rotate(8deg);
+    -webkit-filter: drop-shadow(10px 10px 10px #222);
+    filter: drop-shadow(10px 10px 10px #222);
+}
+
+@media (max-width: 768px){
+    
+}
