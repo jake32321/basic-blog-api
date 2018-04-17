@@ -33,7 +33,9 @@ html, body {
     filter: drop-shadow(10px 10px 10px #222);
 }
 
-@media (max-width: 320px){
+
+/* iPhone SE */
+@media screen and (max-width: 321px) and (min-width: 315px){
     #banner::after {
         width:200%;
         height: 200px;
@@ -43,6 +45,45 @@ html, body {
         padding: 0px;
         height: 100%;
         width: 100%;
-        z-index: 1;
+    }
+}
+
+@media screen and (max-width: 569px) and (min-width: 323px) {
+    #banner::after {
+        width:200%;
+        height: 280px;
+    }
+
+    #banner img {
+        padding: 0px;
+        height: 100%;
+        width: 100%;
+    }
+}
+
+/* iPhone 6, 7, 8 */
+@media screen and (max-width: 376px) and (min-width: 322px) {
+    #banner::after {
+        width: 200%;
+        height: 230px;
+    }
+
+    #banner img {
+        padding: 0px;
+        height: 100%;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 668px) and (min-width: 377px) {
+    #banner::after {
+        width: 200%;
+        height: 370px;
+    }
+
+    #banner img {
+        padding: 0px;
+        height: 100%;
+        width: 100%;
     }
 }
