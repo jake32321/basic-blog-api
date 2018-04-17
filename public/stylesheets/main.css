@@ -13,8 +13,10 @@ html, body {
     padding: 30px;
     -webkit-filter: drop-shadow(10px 10px 10px #222);
     filter: drop-shadow(10px 10px 10px #222);
+    transition: all 0.3s ease-in-out;
     z-index: 1;
 }
+
 
 #banner::after {
     content: "";
@@ -31,6 +33,16 @@ html, body {
     filter: drop-shadow(10px 10px 10px #222);
 }
 
-@media (max-width: 768px){
-    
+@media (max-width: 320px){
+    #banner::after {
+        width:200%;
+        height: 200px;
+    }
+
+    #banner img {
+        padding: 0px;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+    }
 }
