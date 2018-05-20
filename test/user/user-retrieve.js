@@ -43,8 +43,8 @@ test('Should fail if a post with that ID doesn\'t exist.', async (t) => {
     try {
         await getUserById('HyT5eWq');
     } catch (err) {
-        t.is(err.output.payload.statusCode, 400);
-        t.is(err.output.payload.error, 'Bad Request');
+        t.is(err.output.payload.statusCode, 404);
+        t.is(err.output.payload.error, 'Not Found');
         t.is(err.output.payload.message, 'User with the ID: HyT5eWq, does not exist.');
     }
 });
@@ -52,8 +52,6 @@ test('Should fail if a post with that ID doesn\'t exist.', async (t) => {
 test('Should pass if the Id exists.', async (t) => {
     const res = await getUserById(internals.ids[0]);
 
-    t.is(res.disabled, false);
     t.is(res.displayName, 'Joe Blows');
     t.is(res.email, 'test123@test.com');
-    t.is(res.emailVerified, false)
 });

@@ -28,8 +28,8 @@ test('Should fail if a user with the given ID doesn\'t exist.', async (t) => {
     try {
         await deleteUser('HybGft6T');
     } catch (err) {
-        t.is(err.output.payload.statusCode, 400);
-        t.is(err.output.payload.error, 'Bad Request');
+        t.is(err.output.payload.statusCode, 404);
+        t.is(err.output.payload.error, 'Not Found');
         t.is(err.output.payload.message, 'User with the ID: HybGft6T, does not exist.');
     }
 });

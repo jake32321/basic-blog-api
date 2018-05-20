@@ -30,10 +30,8 @@ test('Should be able to create a user when request is formed correctly.', async 
     internals.ids.push(result.uid);
 
     t.truthy(result.uid);
-    t.is(result.disabled, false);
     t.is(result.displayName, 'Joe Blows');
     t.is(result.email, 'test@test.com');
-    t.is(result.emailVerified, false); 
 });
 
 test('Should fail if missing email.', async (t) => {
