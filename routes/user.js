@@ -2,34 +2,37 @@
 const user = require('../services/user');
 const router = require('express').Router();
 
-router.post('/', (req, res) => {
-    user.createUser(req.body).then((result) => {
+router.post('/', async (req, res) => {
+    try {
+        const result = user.createUser(req.body);
         res.send(result);
-    }).catch((err) => {
+    } catch (err) {
         res.send(err.output.payload);
-    });
+    }
 });
 
 router.delete('/:uid', (req, res) => {
-    user.deleteUser(req.params.uid).then((result) => {
+    try {
+        const result = user.deleteUser(req.params.uid);
         res.send(result);
-    }).catch((err) => {
+    } catch (err) {
         res.send(err.output.payload);
-    });
+    }
 });
 
 router.get('/:uid', (req, res) => {
-    user.getUserById(req.params.uid).then((result) => {
+    try {
+        const result = user.getUserById(req.params.uid);
         res.send(result);
-    }).catch((err) => {
+    } catch (err) {
         res.send(err.output.payload);
-    });
+    }
 });
 
 router.put('/:uid', async (req, res) => {
     try {
-        const data = await user.updateUser(req.params.uid, req.body);
-        res.send(data);
+        const result = await user.updateUser(req.params.uid, req.body);
+        res.send(result);
     } catch (err) {
         res.send(err);
     }

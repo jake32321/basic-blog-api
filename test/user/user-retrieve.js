@@ -3,7 +3,7 @@ require('dotenv/config');
 require('../../lib/db').init();
 const admin = require('firebase-admin');
 const test = require('ava');
-const { createUser, getUserById } = require('../../services/user');
+const { createUser, getUserById, deleteUser } = require('../../services/user');
 
 const internals = {
     ids: []
@@ -13,7 +13,7 @@ test.before(async () => {
     const resOne = await createUser({
         disabled: false,
         displayName: 'Joe Blows',
-        email: 'test123@test.com',
+        email: 'test1234@test.com',
         password: 'c00lPa$$',
         emailVerified: false
     });
@@ -21,12 +21,10 @@ test.before(async () => {
     internals.ids.push(resOne.uid);
 });
 
-test.after(async () => {
+test.after.always(async () => {
     internals.ids.forEach(async (id) => {
         await admin.database().ref(`users/${id}`).remove();
     });
-
-    await admin.auth().deleteUser(internals.ids[0]);
 })
 
 test('Should fail to retrieve with a bad Id.', async (t) => {
@@ -53,5 +51,5 @@ test('Should pass if the Id exists.', async (t) => {
     const res = await getUserById(internals.ids[0]);
 
     t.is(res.displayName, 'Joe Blows');
-    t.is(res.email, 'test123@test.com');
+    t.is(res.email, 'test1234@test.com');
 });

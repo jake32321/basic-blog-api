@@ -2,44 +2,49 @@
 const post = require('../services/post');
 const router = require('express').Router();
 
-router.get('/', (req, res) => {
-    post.getPosts().then((result) => {
+router.get('/', async (req, res) => {
+    try {
+        const result = await post.getPosts();
         res.send(result);
-    }).catch((err) => {
+    } catch (err) {
         res.send(err.output.payload);
-    });
+    }
 });
 
-router.post('/', (req, res) => {
-    post.createPost(req.body).then((data) => {
-        res.send(data);
-    }).catch((err) => {
+router.post('/', async (req, res) => {
+    try {
+        const result = await post.createPost(req.body);
+        res.send(result);
+    } catch (err) {
         res.send(err.output.payload);
-    });
+    }
 });
 
-router.get('/:id', (req, res) => {
-    post.getPostById(req.params.id).then((data) => {
-        res.send(data)
-    }).catch((err) => {
+router.get('/:id', async (req, res) => {
+    try {
+        const result = await post.getPostById(req.params.id);
+        res.send(result);
+    } catch (err) {
         res.send(err.output.payload);
-    });
+    }
 });
 
-router.put('/:id', (req, res) => {
-    post.updatePost(req.body, req.params.id).then((data) => {
-        res.send(data);
-    }).catch((err) => {
+router.put('/:id', async (req, res) => {
+    try {
+        const result = await post.updatePost(req.body, req.params.id);
+        res.send(result);
+    } catch (err) {
         res.send(err.output.payload);
-    });  
+    }
 });
 
-router.delete('/:id', (req, res) => {
-    post.deletePost(req.params.id).then((data) => {
-        res.send(data);
-    }).catch((err) => {
+router.delete('/:id', async (req, res) => {
+    try {
+        const result = await post.deletePost(req.params.id);
+        res.send(result);
+    } catch (err) {
         res.send(err.output.payload);
-    });  
+    } 
 });
 
 module.exports = router;
