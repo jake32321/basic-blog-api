@@ -24,8 +24,9 @@ test.before(async () => {
 test.after.always(async () => {
     internals.ids.forEach(async (id) => {
         await admin.database().ref(`users/${id}`).remove();
+        await admin.auth().deleteUser(id);
     });
-})
+});
 
 test('Should fail to retrieve with a bad Id.', async (t) => {
     try {
