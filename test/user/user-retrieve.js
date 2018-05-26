@@ -21,11 +21,11 @@ test.before(async () => {
     internals.ids.push(resOne.uid);
 });
 
-test.after.always(async () => {
-    internals.ids.forEach(async (id) => {
-        await admin.database().ref(`users/${id}`).remove();
-        await admin.auth().deleteUser(id);
-    });
+test.after(async () => {
+    for (var id in internals.ids) {
+        await admin.database().ref(`users/${internals.ids[id]}`).remove();
+        await admin.auth().deleteUser(internals.ids[id]);
+    }
 });
 
 test('Should fail to retrieve with a bad Id.', async (t) => {
