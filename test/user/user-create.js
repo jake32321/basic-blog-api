@@ -10,12 +10,10 @@ const internals = {
 };
 
 test.after(async () => {
-    internals.ids.forEach(async (id) => {
-        await admin.database().ref(`users/${id}`).remove();
-    });
-
-    // Not an ideal solution but works for testing purposes;
-    await admin.auth().deleteUser(internals.ids[0]);
+    for (var id in internals.ids) {
+        await admin.database().ref(`users/${internals.ids[id]}`).remove();
+        await admin.auth().deleteUser(internals.ids[id]);
+    }
 });
 
 test('Should be able to create a user when request is formed correctly.', async (t) => {
